@@ -1,0 +1,43 @@
+{
+  "name": "ridesshare",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "^6.6.0",
+    "babel-preset-react": "^6.5.0",
+    "babel-preset-stage-0": "^6.24.1",
+    "css-loader": "^1.0.0",
+    "google-map-react": "^1.0.6",
+    "moment": "^2.22.2",
+    "react": "^15.0.1",
+    "react-bootstrap": "^0.32.3",
+    "react-datepicker": "^1.6.0",
+    "react-dom": "^15.0.1",
+    "react-redux": "^4.4.5",
+    "react-router-dom": "^4.3.1",
+    "redux": "^3.5.2",
+    "sinon": "^6.1.5",
+    "style-loader": "^0.23.0",
+    "webpack": "^1.13.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "chai": "^3.5.0",
+    "enzyme": "^2.4.1",
+    "jsdom": "^11.12.0",
+    "jsdom-global": "^3.0.2",
+    "mocha": "^3.0.0",
+    "react-test-renderer": "^16.4.2",
+    "webpack-dev-server": "^1.14.1"
+  },
+  "scripts": {
+    "test": "mocha -r jsdom-global/register --compilers js:babel-core/register test --recursive",
+    "dev": "webpack-dev-server -d",
+    "build": "webpack"
+  },
+  "keywords": [],
+  "author": "Zhongkai Liu",
+  "license": "MIT"
+}
