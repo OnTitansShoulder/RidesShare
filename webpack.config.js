@@ -1,42 +1,39 @@
-var path = require('path')
+var path = require('path');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 
-var BUILD_DIR = path.resolve(__dirname + '/public')
-var APP_DIR = path.resolve(__dirname + '/app')
-
-var config = {
-  target: 'web',
-  entry: APP_DIR + '/index.jsx',
-  output: {
-    path: BUILD_DIR,
-    filename: 'bundle.js',
-    publicPath: '/'
-  },
-  resolve: {
-    extensions: ['', '.js', '.jsx']
-  },
-  devtool: 'source-map',
-  devServer: {
-    inline: true,
-    contentBase: BUILD_DIR,
-    port: 3333,
-    historyApiFallback: {disableDotRule: true}
-  },
-  module: {
-    loaders: [
-      {
-        test: /\.jsx?/,
-        include: APP_DIR,
-        loader: 'babel',
-        query: {
-          presets: ['es2015', 'react']
-        }
-      },
-      {
-        test: /\.css$/,
-        loader: 'style-loader!css-loader'
-      }
-    ]
-  }
+module.exports = {
+    entry: './src/index.jsx',
+    output: {
+        path: path.resolve('dist'),
+        filename: 'bundle.js'
+    },
+    resolve: {
+        extensions: ['.js', '.jsx']
+    },
+    module: {
+        loaders: [
+            {
+                test: /\.jsx?$/,
+                exclude: /(node_modules|bower_components)/,
+                loader: 'babel-loader',
+                query: {
+                    presets: ['react', 'es2015', 'stage-3']
+                }
+            }
+        ]
+    },
+    plugins: [new HtmlWebpackPlugin({
+        template: './src/index.html',
+        filename: 'index.html',
+        inject: 'body'
+    })],
+    devServer: {
+        historyApiFallback: true
+    },
+    externals: {
+        // global app config object
+        config: JSON.stringify({
+            apiUrl: 'http://localhost:3334'
+        })
+    }
 }
-
-module.exports = config
