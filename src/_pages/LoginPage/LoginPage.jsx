@@ -3,7 +3,7 @@ import { Grid, Row, Col, FormGroup, ControlLabel, FormControl } from 'react-boot
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { userActions } from '../_actions';
+import { userActions } from '../../_actions';
 
 class LoginPage extends React.Component {
   constructor(props) {

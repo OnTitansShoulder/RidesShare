@@ -6,10 +6,7 @@ import { history } from '../_helpers';
 import { NavBar } from '../NavBar'
 import { alertActions } from '../_actions';
 import { PrivateRoute } from '../_components';
-import { HomePage } from '../HomePage';
-import { DashboardPage } from '../DashboardPage';
-import { LoginPage } from '../LoginPage';
-import { RegisterPage } from '../RegisterPage';
+import { HomePage, LoginPage, RegisterPage, DashboardPage, FindRidePage, PostRidePage } from '../_pages';
 
 class App extends React.Component {
   constructor(props) {
@@ -38,6 +35,8 @@ class App extends React.Component {
                   <Route path="/login" component={LoginPage} />
                   <Route path="/register" component={RegisterPage} />
                   <PrivateRoute exact path="/dashboard" component={DashboardPage} />
+                  <PrivateRoute exact path="/riding" component={FindRidePage} />
+                  <PrivateRoute exact path="/sharing" component={PostRidePage} />
               </div>
             </Router>
           </div>

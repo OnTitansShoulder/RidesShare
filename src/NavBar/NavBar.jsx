@@ -32,9 +32,14 @@ class NavBar extends React.Component {
             <NavItem className="second" href="/register">Register</NavItem>
             <NavItem className="right" href="/login">Sign In</NavItem>
           </Nav>}
-          {user && <Nav pullRight>
+          {user && <div><Nav>
+            <NavItem className="left" href="/dashboard">Dashboard</NavItem>
+            <NavItem className="second" href="/riding">Riding</NavItem>
+            <NavItem className="third" href="/sharing">Sharing</NavItem>
+          </Nav>
+          <Nav pullRight>
             <NavItem className="right" onClick={this.handleLogout}>Sign Out</NavItem>
-          </Nav>}
+          </Nav></div>}
         </Navbar.Collapse>
       </Navbar>
     );

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Grid, Row, Col, FormGroup, ControlLabel, FormControl } from 'react-bootstrap'
 import { connect } from 'react-redux';
 
-import { userActions } from '../_actions';
+import { userActions } from '../../_actions';
 
 export default class RegisterPage extends React.Component {
   constructor(props) {
