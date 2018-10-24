@@ -1,66 +1,108 @@
 import React from 'react';
 import {Grid, Row, Col, FormControl, ControlLabel} from 'react-bootstrap';
 import { connect } from 'react-redux';
+import Geosuggest from 'react-geosuggest';
 
 import GoogleMapReact from 'google-map-react';
-import DatePicker from 'react-datepicker';
+import DateTimePicker from 'react-datetime';
 import moment from 'moment';
-import 'react-datepicker/dist/react-datepicker.css';
-import '../../css/datepicker-overwrite.css';
+import '../../css/datetimepicker.css';
+import '../../css/geosuggest.css';
 import '../../css/adjustments.css';
 
-const AnyReactComponent = ({ text }) => <div>{text}</div>;
+import { mapActions, requestActions } from '../../_actions';
 
 class FindRidePage extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      center: {
-        lat: 29.643677,
-        lng: -82.354975
-      },
-      zoom: 11,
-      startDate: moment(),
-      baggages: 0,
-      startAddr: '',
-      destAddr: '',
-      searchRadius: 5
+      leavingDate: moment().format(),
+      altDays: 0,
+      fromAddress: '',
+      toAddress: '',
+      fromLocation: {},
+      toLocation: {},
+      radius: 0.025
     };
     this.handleDateChange = this.handleDateChange.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
 
   handleDateChange(date) {
-    const state = this.state
+    const state = this.state;
+    if (typeof date == "string") return;
     if (new Date(date) < new Date(moment())) {
       date = moment();
     }
-    state['startDate'] = date;
+    date = date.format();
+    state['leavingDate'] = date;
+    this.setState(state);
+  }
+
+  handleSelect(suggestion) {
+    var address = suggestion.description;
+    var location = suggestion.location;
+    const state = this.state;
+    if (suggestion.label.indexOf("...") != -1) {
+      state['fromAddress'] = address;
+      state['fromLocation'] = location;
+      this.props.dispatch(mapActions.newCenter(location));
+    } else {
+      state['toAddress'] = address;
+      state['toLocation'] = location;
+      this.props.dispatch(mapActions.newCenter(location));
+    }
     this.setState(state);
   }
 
   handleChange(e) {
     const state = this.state;
-    state[e.target.name] = e.target.value;
+    var name = e.target.name;
+    if (name == 'altDays' || name == 'radius') {
+      state[name] = Number(e.target.value);
+    } else {
+      state[name] = e.target.value;
+    }
     this.setState(state);
   }
 
+  handleSubmit(e) {
+    e.preventDefault();
+    const user = this.props.user;
+    this.props.dispatch(requestActions.searchRides(this.state, user));
+  }
+
   render(){
+    const { mapState } = this.props;
     return (
       <div> <Grid> <Row> <Col xs={3}>
         <form onSubmit={this.handleSubmit}>
           <h2>Find a Ride</h2> <br />
-          <ControlLabel>Date</ControlLabel>
-          <DatePicker className="adjust-input-box" selected={this.state.startDate} onChange={this.handleDateChange} /> <br />
-          <ControlLabel>14"Baggage-Sized Spaces Needed</ControlLabel>
-          <input className="adjust-input-box" type="number" name="baggages" value={this.state.baggages} onChange={this.handleChange} /> <br />
-          <br />
+          <ControlLabel>Leaving Date and Time</ControlLabel>
+          <DateTimePicker onChange={this.handleDateChange} /> <br />
+          <ControlLabel>Flexible Dates</ControlLabel>
+          <FormControl componentClass="select" name="altDays" onChange={this.handleChange}>
+            <option value="0">None</option>
+            <option value="1">1 day</option>
+            <option value="2">2 days</option>
+            <option value="3">3 days</option>
+          </FormControl> <br /> <br />
           <ControlLabel>Start Address</ControlLabel>
-          <FormControl type="text" value={this.state.startAddr} name="startAddr" onChange={this.handleChange} /> <br />
+          <Geosuggest
+            placeholder="please select from suggestions"
+            getSuggestLabel={(s) => s.description + " ..."}
+            onSuggestSelect={this.handleSelect} />
           <ControlLabel>Destination Address</ControlLabel>
-          <FormControl type="text" value={this.state.destAddr} name="destAddr" onChange={this.handleChange} /> <br />
-          <ControlLabel>Seach Radius From Address</ControlLabel>
-          <input type="number" value={this.state.searchRadius} name="searchRadius" onChange={this.handleChange} /> <br /><br />
+          <Geosuggest
+            placeholder="please select from suggestions"
+            onSuggestSelect={this.handleSelect} />
+          <ControlLabel>Search Radius</ControlLabel>
+          <FormControl componentClass="select" name="radius" onChange={this.handleChange}>
+            <option value="0.025">Small</option>
+            <option value="0.05">Medium</option>
+            <option value="0.1">Large</option>
+          </FormControl> <br /> <br />
           <button className="btn btn-primary btn-block" type="submit">Search</button>
         </form>
       </Col>
@@ -68,14 +110,9 @@ class FindRidePage extends React.Component {
         <div style={{ height: '90vh', width: '100%' }}>
           <GoogleMapReact
             bootstrapURLKeys={{ key: '' }}
-            defaultCenter={this.state.center}
-            defaultZoom={this.state.zoom}
+            center={mapState.center}
+            zoom={mapState.zoom}
           >
-            <AnyReactComponent
-              lat={29.643671}
-              lng={-82.354972}
-              text={'Steak & Shake'}
-            />
           </GoogleMapReact>
         </div>
       </Col> </Row> </Grid> </div>
@@ -84,7 +121,10 @@ class FindRidePage extends React.Component {
 }
 
 function mapStateToProps(state) {
-  return {};
+  return {
+    mapState: state.mapState,
+    user: state.authentication.user
+  };
 }
 
 const connectedFindRidePage = connect(mapStateToProps)(FindRidePage);

@@ -7,7 +7,8 @@ const initState = {
     lng: -82.354975
   },
   zoom: 11,
-  pins: []
+  fromPins: [],
+  toPins: []
 };
 
 export function mapState(state = initState, action) {

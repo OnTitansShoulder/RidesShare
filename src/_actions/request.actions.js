@@ -4,7 +4,8 @@ import { history } from '../_helpers';
 import { requestService } from '../_services';
 
 export const requestActions = {
-  newRide
+  newRide,
+  searchRides
 };
 
 function newRide(rideInfo, user) {
@@ -32,5 +33,29 @@ function newRide(rideInfo, user) {
 
   function request() { return { type: requestConstants.NEW_RIDE_SENT }}
   function success() { return { type: requestConstants.NEW_RIDE_SUCCESS }}
-  function failure() { return { type: requestConstants.NEW_RIDE_FAILURE }}
+  function failure(msg) { return { type: requestConstants.NEW_RIDE_FAILURE, message: msg }}
+}
+
+function searchRides(criteria, user) {
+  console.log(criteria);
+  return dispatch => {
+    dispatch(request());
+    var request = {
+      criteria,
+      token: user.token
+    };
+    requestService.searchRides(request)
+      .then(
+        (data) => {
+          dispatch(success(data));
+        },
+        err => {
+          dispatch(failure(error.toString()));
+        }
+      )
+  };
+
+  function request() { return { type: requestConstants.SEARCHING_RIDES }}
+  function success(data) { return { type: requestConstants.SEARCH_RIDES_SUCCESS, rides: data }}
+  function failure(msg) { return { type: requestConstants.SEARCH_RIDES_FAILURE, message: msg }}
 }

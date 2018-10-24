@@ -17,7 +17,7 @@ class PostRidePage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      leavingDate: moment(),
+      leavingDate: moment().format(),
       seats: 0,
       fromAddress: '',
       toAddress: '',
