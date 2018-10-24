@@ -40,11 +40,11 @@ function searchRides(criteria, user) {
   console.log(criteria);
   return dispatch => {
     dispatch(request());
-    var request = {
+    var req = {
       criteria,
       token: user.token
     };
-    requestService.searchRides(request)
+    requestService.searchRides(req)
       .then(
         (data) => {
           dispatch(success(data));
@@ -55,7 +55,15 @@ function searchRides(criteria, user) {
       )
   };
 
-  function request() { return { type: requestConstants.SEARCHING_RIDES }}
-  function success(data) { return { type: requestConstants.SEARCH_RIDES_SUCCESS, rides: data }}
-  function failure(msg) { return { type: requestConstants.SEARCH_RIDES_FAILURE, message: msg }}
+  function request() { return {
+    type: requestConstants.SEARCHING_RIDES
+  }}
+  function success(data) { return {
+    type: requestConstants.SEARCH_RIDES_SUCCESS,
+    rides: data
+  }}
+  function failure(msg) { return {
+    type: requestConstants.SEARCH_RIDES_FAILURE,
+    message: msg
+  }}
 }

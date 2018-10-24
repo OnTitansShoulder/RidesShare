@@ -88,7 +88,7 @@ class PostRidePage extends React.Component {
           <form onSubmit={this.handleSubmit}>
             <h2>Post a Ride</h2> <br />
             <ControlLabel>Leaving Date and Time</ControlLabel>
-            <DateTimePicker value={this.state.leavingDate} onChange={this.handleDateChange} /> <br />
+            <DateTimePicker onChange={this.handleDateChange} /> <br />
             <ControlLabel>Seats Available</ControlLabel>
             <input className="adjust-input-box" type="number" name="seats" value={this.state.seats} onChange={this.handleChange} /> <br />
             <br />
@@ -111,7 +111,7 @@ class PostRidePage extends React.Component {
               center={mapState.center}
               zoom={mapState.zoom}
             >
-            <Pin text={this.state.mapCenter} />
+            <Pin text={this.state.mapCenter} handleClick={() => {}} />
             </GoogleMapReact>
           </div>
         </Col>

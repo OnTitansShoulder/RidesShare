@@ -1,17 +1,17 @@
 import { requestConstants } from '../_constants';
 
 const initState = {
-  location: {
-    lat: 29.643677,
-    lng: -82.354975
-  }
+  myRides: [],
+  myRequests: [],
+  myRideHistory: [],
+  myRequestHistory: []
 };
 
-export default mapRequest(state = initState, action) {
+export default rideRequests(state = initState, action) {
   switch (action.type) {
-    case requestConstants.UPDATE_MAP_CENTER:
+    case requestConstants.REQUESTS_STATS:
       return {
-        currLocation: state.location
+        ...state
       };
     default:
       return state

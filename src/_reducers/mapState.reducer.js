@@ -1,5 +1,5 @@
 import React from 'react';
-import { mapConstants } from '../_constants';
+import { mapConstants, requestConstants } from '../_constants';
 
 const initState = {
   center: {
@@ -7,8 +7,7 @@ const initState = {
     lng: -82.354975
   },
   zoom: 11,
-  fromPins: [],
-  toPins: []
+  searchResults: []
 };
 
 export function mapState(state = initState, action) {
@@ -19,6 +18,11 @@ export function mapState(state = initState, action) {
         center: action.center,
         zoom: 14
       };
+    case requestConstants.SEARCH_RIDES_SUCCESS:
+      return {
+        ...state,
+        searchResults: action.rides
+      }
     default:
       return state
   }

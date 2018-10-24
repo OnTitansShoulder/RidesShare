@@ -9,6 +9,7 @@ import moment from 'moment';
 import '../../css/datetimepicker.css';
 import '../../css/geosuggest.css';
 import '../../css/adjustments.css';
+import { Pin } from '../../_components'
 
 import { mapActions, requestActions } from '../../_actions';
 
@@ -22,11 +23,14 @@ class FindRidePage extends React.Component {
       toAddress: '',
       fromLocation: {},
       toLocation: {},
-      radius: 0.025
+      radius: 0.025,
+      activeLocation: this.props.mapState.center
     };
     this.handleDateChange = this.handleDateChange.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleCenterChange = this.handleCenterChange.bind(this);
   }
 
   handleDateChange(date) {
@@ -53,6 +57,7 @@ class FindRidePage extends React.Component {
       state['toLocation'] = location;
       this.props.dispatch(mapActions.newCenter(location));
     }
+    state['activeLocation'] = location;
     this.setState(state);
   }
 
@@ -67,10 +72,24 @@ class FindRidePage extends React.Component {
     this.setState(state);
   }
 
+  handleCenterChange(e) {
+    e.preventDefault();
+    const state = this.state;
+    state['activeLocation'] = state[e.target.name];
+    this.setState(state);
+  }
+
   handleSubmit(e) {
     e.preventDefault();
     const user = this.props.user;
-    this.props.dispatch(requestActions.searchRides(this.state, user));
+    const criteria = {
+      leavingDate: this.state.leavingDate,
+      altDays: this.state.altDays,
+      fromLocation: this.state.fromLocation,
+      toLocation: this.state.toLocation,
+      radius: this.state.radius
+    };
+    this.props.dispatch(requestActions.searchRides(criteria, user));
   }
 
   render(){
@@ -80,14 +99,14 @@ class FindRidePage extends React.Component {
         <form onSubmit={this.handleSubmit}>
           <h2>Find a Ride</h2> <br />
           <ControlLabel>Leaving Date and Time</ControlLabel>
-          <DateTimePicker onChange={this.handleDateChange} /> <br />
+          <DateTimePicker onChange={this.handleDateChange} />
           <ControlLabel>Flexible Dates</ControlLabel>
           <FormControl componentClass="select" name="altDays" onChange={this.handleChange}>
             <option value="0">None</option>
             <option value="1">1 day</option>
             <option value="2">2 days</option>
             <option value="3">3 days</option>
-          </FormControl> <br /> <br />
+          </FormControl> <br />
           <ControlLabel>Start Address</ControlLabel>
           <Geosuggest
             placeholder="please select from suggestions"
@@ -97,12 +116,19 @@ class FindRidePage extends React.Component {
           <Geosuggest
             placeholder="please select from suggestions"
             onSuggestSelect={this.handleSelect} />
+          <div>
+            <button className="btn btn-primary" name="fromLocation"
+              onClick={this.handleCenterChange}>Start Point</button>
+            <button className="btn btn-primary pull-right" name="toLocation"
+              onClick={this.handleCenterChange}>Destination Point</button>
+          </div>
+          <br />
           <ControlLabel>Search Radius</ControlLabel>
           <FormControl componentClass="select" name="radius" onChange={this.handleChange}>
             <option value="0.025">Small</option>
             <option value="0.05">Medium</option>
             <option value="0.1">Large</option>
-          </FormControl> <br /> <br />
+          </FormControl> <br />
           <button className="btn btn-primary btn-block" type="submit">Search</button>
         </form>
       </Col>
@@ -110,9 +136,21 @@ class FindRidePage extends React.Component {
         <div style={{ height: '90vh', width: '100%' }}>
           <GoogleMapReact
             bootstrapURLKeys={{ key: '' }}
-            center={mapState.center}
+            center={this.state.activeLocation}
             zoom={mapState.zoom}
           >
+          {mapState.searchResults.map((ride,i) => (
+            <Pin text={(i+1).toString()}
+              key={2*i} rideInfo={ride}
+              lat={ride.fromLocation.lat}
+              lng={ride.fromLocation.lng} />
+          ))}
+          {mapState.searchResults.map((ride,i) => (
+            <Pin text={(i+1).toString()}
+              key={2*i+1} rideInfo={ride}
+              lat={ride.toLocation.lat}
+              lng={ride.toLocation.lng} />
+          ))}
           </GoogleMapReact>
         </div>
       </Col> </Row> </Grid> </div>
