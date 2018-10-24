@@ -1,0 +1,5 @@
+export const requestConstants = {
+  NEW_RIDE_SENT: 'NEW_RIDE_SENT',
+  NEW_RIDE_SUCCESS: 'NEW_RIDE_SUCCESS',
+  NEW_RIDE_FAILURE: 'NEW_RIDE_FAILURE'
+}

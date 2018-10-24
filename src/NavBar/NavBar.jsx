@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import { history } from '../_helpers';
 import { userActions } from '../_actions';
+import './navbar.css';
 
 class NavBar extends React.Component {
   constructor(props) {
