@@ -21,8 +21,8 @@ class PostRidePage extends React.Component {
       seats: 0,
       fromAddress: '',
       toAddress: '',
-      fromLocation: {},
-      toLocation: {},
+      fromLocation: '',
+      toLocation: '',
       mapCenter: 'A'
     };
     this.handleDateChange = this.handleDateChange.bind(this);
@@ -111,7 +111,14 @@ class PostRidePage extends React.Component {
               center={mapState.center}
               zoom={mapState.zoom}
             >
-            <Pin text={this.state.mapCenter} handleClick={() => {}} />
+            {this.state.fromLocation && (
+              <Pin text={'A'} key={0} handleClick={() => {}}
+              lat={this.state.fromLocation.lat} lng={this.state.fromLocation.lng}/>
+            )}
+            {this.state.toLocation && (
+              <Pin text={'B'} key={1} handleClick={() => {}}
+              lat={this.state.toLocation.lat} lng={this.state.toLocation.lng}/>
+            )}
             </GoogleMapReact>
           </div>
         </Col>

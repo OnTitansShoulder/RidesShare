@@ -1,8 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Modal } from 'react-bootstrap';
-import shouldPureComponentUpdate from 'react-pure-render/function';
+import { connect } from 'react-redux';
+import moment from 'moment';
+import { requestActions } from '../_actions';
 
+import '../css/adjustments.css';
 const K_SIZE = 40;
 const PinStyle = {
   // initially any map object has left top corner at lat lng coordinates
@@ -33,17 +36,32 @@ class Pin extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showModal: false
+      showModal: false,
+      comments: ''
     };
+    this.handleChange = this.handleChange.bind(this);
     this.handleShow = this.handleShow.bind(this);
     this.handleClose = this.handleClose.bind(this);
+    this.handleRequest = this.handleRequest.bind(this);
   }
-
+  handleChange(e) {
+    const state = this.state;
+    state[e.target.name] = e.target.value;
+    this.setState(state);
+  }
   handleShow() {
     this.setState({
       ...this.state, showModal: true
     }); }
   handleClose() { this.setState({...this.state, showModal: false}); }
+  handleRequest() {
+    this.props.dispatch(requestActions.newRideReq(
+      this.props.rideInfo, this.props.user, this.state.comments
+    ));
+    const state = this.state;
+    state['showModal'] = false;
+    this.setState(state);
+  }
 
   render() {
     const style = this.props.$hover ? PinStyleHover : PinStyle;
@@ -56,14 +74,25 @@ class Pin extends React.Component {
         <Modal show={this.state.showModal} onHide={this.handleClose}>
           <Modal.Header closeButton><Modal.Title>Ride Details</Modal.Title></Modal.Header>
           <Modal.Body>
-            <h4>Leaving Date & Time</h4>
-            <p>{rideInfo && rideInfo.leavingDate}</p>
-            <h4>From Address:</h4>
-            <p>{rideInfo && rideInfo.fromAddress}</p>
-            <h4>To Address:</h4>
-            <p>{rideInfo && rideInfo.toAddress}</p>
-            <h4>Driver Info</h4>
-            <p>Email: {rideInfo && rideInfo.username} </p>
+            <div className="indent-parag">
+              <h4>Leaving Date & Time</h4>
+              <p>{rideInfo && moment(rideInfo.leavingDate).format('YYYY-MM-DD hh:mm A')}</p>
+              <h4>From Address:</h4>
+              <p>{rideInfo && rideInfo.fromAddress}</p>
+              <h4>To Address:</h4>
+              <p>{rideInfo && rideInfo.toAddress}</p>
+              <h4>Driver Info</h4>
+              <p>Name: {rideInfo && rideInfo.fullname} </p>
+              <h4>Comments</h4>
+              <textarea rows={6} cols={65} name='comments'
+                placeholder='Write what you need to let the driver know here,
+                such as how many luggages you will bring and whether you want to share the gas.'
+                onChange={this.handleChange}></textarea>
+              {rideInfo && (<div style={{display: 'grid', margin: '15px 0 0 0'}}>
+                <button className="btn btn-primary" onClick={this.handleRequest}
+                  style={{margin: 'auto'}}>Request for this ride</button>
+              </div>)}
+            </div>
           </Modal.Body>
         </Modal>
       </div>
@@ -71,10 +100,17 @@ class Pin extends React.Component {
   }
 };
 
+function mapStateToProps(state) {
+  return {
+    user: state.authentication.user
+  };
+}
+
 Pin.propTypes = {
   $hover: PropTypes.bool,
   text: PropTypes.string,
   rideInfo: PropTypes.object
 };
 
-export { Pin };
+const connectedPin = connect(mapStateToProps)(Pin);
+export { connectedPin as Pin };

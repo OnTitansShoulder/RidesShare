@@ -2,16 +2,20 @@ import { requestConstants } from '../_constants';
 
 const initState = {
   myRides: [],
-  myRequests: [],
-  myRideHistory: [],
-  myRequestHistory: []
+  myRideReqs: []
 };
 
-export default rideRequests(state = initState, action) {
+export function rideRequests(state = initState, action) {
   switch (action.type) {
-    case requestConstants.REQUESTS_STATS:
+    case requestConstants.MYRIDES_SUCCESS:
       return {
-        ...state
+        ...state,
+        myRides: action.rides
+      };
+    case requestConstants.MYRIDEREQS_SUCCESS:
+      return {
+        ...state,
+        myRideReqs: action.ridereqs
       };
     default:
       return state

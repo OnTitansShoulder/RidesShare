@@ -17,3 +17,15 @@
   -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
   transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 }
+
+.indent-parag > p {
+  padding-left: 20px;
+}
+
+.btn-group {
+  margin: 0px 0px 0px 0px !important
+}
+
+.panel-body {
+  padding: 0px !important
+}

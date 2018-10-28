@@ -1,42 +1,94 @@
 import React from 'react';
-import {Grid, Row, Col} from 'react-bootstrap';
+import {Grid, Row, Col, Table, Panel} from 'react-bootstrap';
 import { connect } from 'react-redux';
 
-import { userActions } from '../../_actions';
+import { requestActions } from '../../_actions';
+import { Pin, TableRow } from '../../_components';
+import '../../css/adjustments.css';
 
 class DashboardPage extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+  componentDidMount() {
+    const dispatch = this.props.dispatch;
+    const user = this.props.user;
+    dispatch(requestActions.findMyRides(user));
+    dispatch(requestActions.findMyRideReqs(user));
+  }
   render() {
-    const { user } = this.props;
+    const { user, myRides, myRideReqs } = this.props;
+    const testRide = {
+      _id: "5bcfe266bcaea77e579f6cea",
+      leavingDate: "2018-10-24T02:20:50.000Z",
+      seats: 0,
+      fromAddress: "2777 Southwest Archer Road, Gainesville, FL, USA",
+      toAddress: "1756 Northwest 71st Avenue, Plantation, FL, USA",
+      fullname: "Zhongkai Liu",
+      username: "zkliu@ufl.edu"
+    };
     return (
-      <div>
-        <Grid>
-          <Row>
-            <Col xs={3}>
-              <div>
-                <img src="/app/assets/temp.png" />
-              </div>
-              <br />
-              <button className="btn btn-primary btn-block">Account Settings</button> <br />
-              <button className="btn btn-primary btn-block">Reset Password</button> <br />
-              <button className="btn btn-primary btn-block">Sign Out</button> <br />
-            </Col>
-            <Col xs={3} xsOffset={1}>
-              <button className="btn btn-primary btn-block">Post A Ride</button> <br />
-            </Col>
-            <Col xs={3} xsOffset={1}>
-              <button className="btn btn-primary btn-block">Request A Ride</button> <br />
-            </Col>
-          </Row>
-        </Grid>
-      </div>
+      <div> <Grid> <Row>
+        <Col xs={2}>
+          <div className="text-center">
+            <img style={{width: '100px'}} src="/src/assets/Headshot.jpg" />
+          </div>
+          <br />
+          <button className="btn btn-primary btn-block">Account Settings</button> <br />
+          <button className="btn btn-primary btn-block">Reset Password</button> <br />
+          <button className="btn btn-primary btn-block">Sign Out</button> <br />
+          <Pin text='1' rideInfo={testRide} />
+        </Col>
+        <Col xs={10}>
+        <Panel>
+          <Panel.Heading>My Shared Rides</Panel.Heading>
+          <Panel.Body>
+            {myRides.length > 0 && <Table striped bordered condensed hover>
+              <thead><tr>
+                <th>Departure Time</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Driver</th>
+                <th>Actions</th>
+              </tr></thead>
+              <tbody>
+                {myRides.map((ride, i) => (
+                  <TableRow key={i} rideInfo={ride} ridereq={false}/>
+                ))}
+              </tbody>
+            </Table>}
+          </Panel.Body>
+        </Panel>
+        <Panel>
+          <Panel.Heading>My Pending Requests</Panel.Heading>
+          <Panel.Body>
+            {myRideReqs.length > 0 && <Table striped bordered condensed hover>
+              <thead><tr>
+                <th>Departure Time</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Rider</th>
+                <th>Actions</th>
+              </tr></thead>
+              <tbody>
+                {myRideReqs.map((ride, i) => (
+                  <TableRow key={i} rideInfo={ride} ridereq={true}/>
+                ))}
+              </tbody>
+            </Table>}
+          </Panel.Body>
+        </Panel>
+        </Col>
+      </Row> </Grid> </div>
     );
   }
 }
 
 function mapStateToProps(state) {
-  const { user } = state.authentication;
   return {
-    user
+    user: state.authentication.user,
+    myRides: state.rideRequests.myRides,
+    myRideReqs: state.rideRequests.myRideReqs
   };
 }
 

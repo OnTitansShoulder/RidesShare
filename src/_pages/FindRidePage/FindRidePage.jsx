@@ -125,9 +125,9 @@ class FindRidePage extends React.Component {
           <br />
           <ControlLabel>Search Radius</ControlLabel>
           <FormControl componentClass="select" name="radius" onChange={this.handleChange}>
-            <option value="0.025">Small</option>
-            <option value="0.05">Medium</option>
-            <option value="0.1">Large</option>
+            <option value="0.025">Small (within 7.5 miles)</option>
+            <option value="0.05">Medium (within 15 miles)</option>
+            <option value="0.1">Large (within 30 miles)</option>
           </FormControl> <br />
           <button className="btn btn-primary btn-block" type="submit">Search</button>
         </form>
