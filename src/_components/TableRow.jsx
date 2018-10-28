@@ -2,7 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Glyphicon, ButtonGroup, Button, ButtonToolbar } from 'react-bootstrap';
 import moment from 'moment';
+import { connect } from 'react-redux';
 import '../css/adjustments.css';
+import { requestActions } from '../_actions';
 
 const btnStyle = { padding: '6px 6px 6px 6px'};
 
@@ -13,10 +15,12 @@ class TableRow extends React.Component {
     this.handleReject = this.handleReject.bind(this);
   }
   handleAccept() {
-
+    const ride = this.props.rideInfo;
+    this.props.dispatch(requestActions.updateRide(ride._id, { status: 'ACCEPTED'}));
   }
   handleReject() {
-
+    const ride = this.props.rideInfo;
+    this.props.dispatch(requestActions.updateRide(ride._id, { status: 'REJECTED'}));
   }
   render() {
     const ride = this.props.rideInfo;
@@ -26,11 +30,16 @@ class TableRow extends React.Component {
         <td>{ride.fromAddress}</td>
         <td>{ride.toAddress}</td>
         <td>{ride.driverName}</td>
+        <td>{ride.status}</td>
         <td><ButtonToolbar><ButtonGroup>
-          {this.props.ridereq && <Button bsStyle='success' style={btnStyle} onClick={this.handleAccept}>
+          {this.props.isDriver && ride.status == 'PENDING' &&
+            <Button bsStyle='success' style={btnStyle} onClick={this.handleAccept}>
             <Glyphicon glyph='ok'/></Button>
           }
-          <Button bsStyle='danger' style={btnStyle} onClick={this.handleReject}><Glyphicon glyph='remove'/></Button>
+          {ride.status != 'REJECTED' &&
+            <Button bsStyle='danger' style={btnStyle} onClick={this.handleReject}>
+            <Glyphicon glyph='remove'/></Button>
+          }
         </ButtonGroup></ButtonToolbar></td>
       </tr>
     );
@@ -38,8 +47,13 @@ class TableRow extends React.Component {
 }
 
 TableRow.propTypes = {
-  ridereq: PropTypes.bool,
+  isDriver: PropTypes.bool,
   rideInfo: PropTypes.object
 };
 
-export { TableRow };
+function mapStateToProps(state) {
+  return {};
+}
+
+const connectedTableRow = connect(mapStateToProps)(TableRow)
+export { connectedTableRow as TableRow };

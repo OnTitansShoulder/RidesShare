@@ -7,7 +7,8 @@ export const requestService = {
   newRideReq,
   searchRides,
   findMyRides,
-  findMyRideReqs
+  findMyRideReqs,
+  updateReq
 };
 
 function newRide(rideInfo) {
@@ -63,5 +64,16 @@ function findMyRideReqs(reqInfo) {
     body: JSON.stringify(reqInfo)
   };
   return fetch(`${config.apiUrl}/api/requests/myridereqs`, requestOptions)
+    .then(sharedServices.handleResponse);
+}
+
+function updateReq(reqInfo) {
+  const auth_header = authHeader();
+  const requestOptions = {
+    method: 'POST',
+    headers: { ...auth_header, 'Content-Type': 'application/json' },
+    body: JSON.stringify(reqInfo)
+  };
+  return fetch(`${config.apiUrl}/api/requests/ridereq`, requestOptions)
     .then(sharedServices.handleResponse);
 }

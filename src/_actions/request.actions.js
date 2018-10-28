@@ -8,7 +8,8 @@ export const requestActions = {
   searchRides,
   newRideReq,
   findMyRides,
-  findMyRideReqs
+  findMyRideReqs,
+  updateRide
 };
 
 function newRide(rideInfo, user) {
@@ -18,8 +19,7 @@ function newRide(rideInfo, user) {
       ...rideInfo,
       username: user.username
     };
-    var newObj = {rideInfo, token: user.token};
-    requestService.newRide({rideInfo, token: user.token})
+    requestService.newRide({ rideInfo })
       .then(
         () => {
           dispatch(success());
@@ -52,7 +52,7 @@ function newRideReq(rideInfo, user, comments) {
       comments: comments,
       status: 'PENDING'
     };
-    requestService.newRideReq({reqInfo, token: user.token})
+    requestService.newRideReq({ reqInfo })
       .then(
         () => {
           dispatch(success());
@@ -71,11 +71,7 @@ function newRideReq(rideInfo, user, comments) {
 function searchRides(criteria, user) {
   return dispatch => {
     dispatch(request());
-    var req = {
-      criteria,
-      token: user.token
-    };
-    requestService.searchRides(req)
+    requestService.searchRides({ criteria })
       .then(
         (data) => {
           dispatch(success(data));
@@ -83,7 +79,7 @@ function searchRides(criteria, user) {
         err => {
           dispatch(failure(error.toString()));
         }
-      )
+      );
   };
 
   function request() { return { type: requestConstants.SEARCHING_RIDES }}
@@ -100,9 +96,7 @@ function searchRides(criteria, user) {
 function findMyRides(user) {
   return dispatch => {
     dispatch(request());
-    requestService.findMyRides({
-      username: user.username, token: user.token
-    }).then(
+    requestService.findMyRides({ username: user.username }).then(
         (data) => dispatch(success(data)),
         err => dispatch(failure(error.toString()))
       );
@@ -116,9 +110,7 @@ function findMyRides(user) {
 function findMyRideReqs(user) {
   return dispatch => {
     dispatch(request());
-    requestService.findMyRideReqs({
-      username: user.username, token: user.token
-    }).then(
+    requestService.findMyRideReqs({ username: user.username }).then(
         (data) => dispatch(success(data)),
         err => dispatch(failure(error.toString()))
       );
@@ -126,4 +118,17 @@ function findMyRideReqs(user) {
   function request() { return { type: requestConstants.MYRIDEREQS_SENT }}
   function success(data) { return { type: requestConstants.MYRIDEREQS_SUCCESS, ridereqs: data }}
   function failure(msg) { return { type: requestConstants.MYRIDEREQS_FAILURE, message: msg }}
+}
+
+function updateRide(ridereqId, updates) {
+  return dispatch => {
+    dispatch(request());
+    requestService.updateReq({ ridereqId, updates }).then(
+        () => dispatch(success()),
+        err => dispatch(failure(error.toString()))
+      );
+  };
+  function request() { return { type: requestConstants.UPDATEREQ_SENT }}
+  function success() { return { type: requestConstants.UPDATEREQ_SUCCESS, ridereqId, updates }}
+  function failure(msg) { return { type: requestConstants.UPDATEREQ_FAILURE, message: msg }}
 }

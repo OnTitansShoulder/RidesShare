@@ -41,38 +41,40 @@ class DashboardPage extends React.Component {
         </Col>
         <Col xs={10}>
         <Panel>
-          <Panel.Heading>My Shared Rides</Panel.Heading>
+          <Panel.Heading>Me as the Driver</Panel.Heading>
           <Panel.Body>
             {myRides.length > 0 && <Table striped bordered condensed hover>
               <thead><tr>
                 <th>Departure Time</th>
                 <th>From</th>
                 <th>To</th>
-                <th>Driver</th>
+                <th>Rider</th>
+                <th>Status</th>
                 <th>Actions</th>
               </tr></thead>
               <tbody>
                 {myRides.map((ride, i) => (
-                  <TableRow key={i} rideInfo={ride} ridereq={false}/>
+                  <TableRow key={i} rideInfo={ride} isDriver={true}/>
                 ))}
               </tbody>
             </Table>}
           </Panel.Body>
         </Panel>
         <Panel>
-          <Panel.Heading>My Pending Requests</Panel.Heading>
+          <Panel.Heading>Me As the Rider</Panel.Heading>
           <Panel.Body>
             {myRideReqs.length > 0 && <Table striped bordered condensed hover>
               <thead><tr>
                 <th>Departure Time</th>
                 <th>From</th>
                 <th>To</th>
-                <th>Rider</th>
+                <th>Driver</th>
+                <th>Status</th>
                 <th>Actions</th>
               </tr></thead>
               <tbody>
                 {myRideReqs.map((ride, i) => (
-                  <TableRow key={i} rideInfo={ride} ridereq={true}/>
+                  <TableRow key={i} rideInfo={ride} isDriver={false}/>
                 ))}
               </tbody>
             </Table>}
