@@ -1,5 +1,5 @@
 import React from 'react';
-import {Grid, Row, Col, FormControl, ControlLabel} from 'react-bootstrap';
+import {Grid, Row, Col, FormControl, ControlLabel, Glyphicon} from 'react-bootstrap';
 import { connect } from 'react-redux';
 import Geosuggest from 'react-geosuggest';
 
@@ -18,16 +18,14 @@ class FindRidePage extends React.Component {
     super(props)
     this.state = {
       leavingDate: moment().format(),
-      altDays: 0,
-      fromAddress: '',
-      toAddress: '',
-      fromLocation: {},
-      toLocation: {},
-      radius: 0.025,
+      altDays: 0, radius: 0.025, zoom: 11,
+      fromAddress: '', toAddress: '',
+      fromLocation: {}, toLocation: {},
       activeLocation: this.props.mapState.center
     };
     this.handleDateChange = this.handleDateChange.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
+    this.swapAddrs = this.swapAddrs.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCenterChange = this.handleCenterChange.bind(this);
@@ -43,24 +41,36 @@ class FindRidePage extends React.Component {
     state['leavingDate'] = date;
     this.setState(state);
   }
-
   handleSelect(suggestion) {
+    if (typeof suggestion == 'undefined') {
+      return;
+    }
     var address = suggestion.description;
     var location = suggestion.location;
     const state = this.state;
     if (suggestion.label.indexOf("...") != -1) {
       state['fromAddress'] = address;
       state['fromLocation'] = location;
-      this.props.dispatch(mapActions.newCenter(location));
     } else {
       state['toAddress'] = address;
       state['toLocation'] = location;
-      this.props.dispatch(mapActions.newCenter(location));
     }
     state['activeLocation'] = location;
+    state['zoom'] = 14;
     this.setState(state);
   }
-
+  swapAddrs() {
+    const state = this.state;
+    var temp = state['fromAddress'];
+    state['fromAddress'] = state['toAddress'];
+    this._from.update(state['toAddress']);
+    state['toAddress'] = temp;
+    this._to.update(temp);
+    temp = state['fromLocation'];
+    state['fromLocation'] = state['toLocation'];
+    state['toLocation'] = temp;
+    this.setState(state);
+  }
   handleChange(e) {
     const state = this.state;
     var name = e.target.name;
@@ -71,14 +81,13 @@ class FindRidePage extends React.Component {
     }
     this.setState(state);
   }
-
   handleCenterChange(e) {
     e.preventDefault();
     const state = this.state;
     state['activeLocation'] = state[e.target.name];
+    state['zoom'] = 14;
     this.setState(state);
   }
-
   handleSubmit(e) {
     e.preventDefault();
     const user = this.props.user;
@@ -107,27 +116,28 @@ class FindRidePage extends React.Component {
             <option value="2">2 days</option>
             <option value="3">3 days</option>
           </FormControl> <br />
-          <ControlLabel>Start Address</ControlLabel>
-          <Geosuggest
+          <button className={this.state.fromAddress && "btn btn-primary" || "btn btn-primary disabled"}
+            name="fromLocation"
+            onClick={this.handleCenterChange}>From</button>
+          <Geosuggest ref={el=>this._from=el}
             placeholder="please select from suggestions"
             getSuggestLabel={(s) => s.description + " ..."}
             onSuggestSelect={this.handleSelect} />
-          <ControlLabel>Destination Address</ControlLabel>
-          <Geosuggest
+          <button className={this.state.toAddress && "btn btn-primary" || "btn btn-primary disabled"}
+            name="toLocation"
+            onClick={this.handleCenterChange}>To</button>
+          <button className="btn btn-default pull-right" onClick={this.swapAddrs}>
+            Swap Addresses <Glyphicon glyph='resize-vertical'/>
+          </button>
+          <Geosuggest ref={el=>this._to=el}
             placeholder="please select from suggestions"
             onSuggestSelect={this.handleSelect} />
-          <div>
-            <button className="btn btn-primary" name="fromLocation"
-              onClick={this.handleCenterChange}>Start Point</button>
-            <button className="btn btn-primary pull-right" name="toLocation"
-              onClick={this.handleCenterChange}>Destination Point</button>
-          </div>
           <br />
           <ControlLabel>Search Radius</ControlLabel>
           <FormControl componentClass="select" name="radius" onChange={this.handleChange}>
-            <option value="0.025">Small (within 7.5 miles)</option>
-            <option value="0.05">Medium (within 15 miles)</option>
-            <option value="0.1">Large (within 30 miles)</option>
+            <option value="0.025">Small (within 3 miles)</option>
+            <option value="0.05">Medium (within 7 miles)</option>
+            <option value="0.1">Large (within 15 miles)</option>
           </FormControl> <br />
           <button className="btn btn-primary btn-block" type="submit">Search</button>
         </form>
@@ -137,7 +147,7 @@ class FindRidePage extends React.Component {
           <GoogleMapReact
             bootstrapURLKeys={{ key: '' }}
             center={this.state.activeLocation}
-            zoom={mapState.zoom}
+            zoom={this.state.zoom}
           >
           {mapState.searchResults.map((ride,i) => (
             <Pin text={(i+1).toString()}

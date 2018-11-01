@@ -40,9 +40,11 @@ class DashboardPage extends React.Component {
           <Pin text='1' rideInfo={testRide} />
         </Col>
         <Col xs={10}>
-        <Panel>
-          <Panel.Heading>Me as the Driver</Panel.Heading>
-          <Panel.Body>
+        <Panel id='driverPanel' defaultExpanded={true}>
+          <Panel.Heading style={{color: '#337ab7'}}>
+            <Panel.Title toggle={true}>Me As the Driver</Panel.Title>
+          </Panel.Heading>
+          <Panel.Collapse><Panel.Body>
             {myRides.length > 0 && <Table striped bordered condensed hover>
               <thead><tr>
                 <th>Departure Time</th>
@@ -58,11 +60,13 @@ class DashboardPage extends React.Component {
                 ))}
               </tbody>
             </Table>}
-          </Panel.Body>
+          </Panel.Body></Panel.Collapse>
         </Panel>
-        <Panel>
-          <Panel.Heading>Me As the Rider</Panel.Heading>
-          <Panel.Body>
+        <Panel id='riderPanel' defaultExpanded={true}>
+          <Panel.Heading style={{color: '#337ab7'}}>
+            <Panel.Title toggle={true}>Me As the Rider</Panel.Title>
+          </Panel.Heading>
+          <Panel.Collapse><Panel.Body>
             {myRideReqs.length > 0 && <Table striped bordered condensed hover>
               <thead><tr>
                 <th>Departure Time</th>
@@ -78,7 +82,7 @@ class DashboardPage extends React.Component {
                 ))}
               </tbody>
             </Table>}
-          </Panel.Body>
+          </Panel.Body></Panel.Collapse>
         </Panel>
         </Col>
       </Row> </Grid> </div>
