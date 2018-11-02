@@ -18,7 +18,7 @@ class FindRidePage extends React.Component {
     super(props)
     this.state = {
       leavingDate: moment().format(),
-      altDays: 0, radius: 0.025, zoom: 11,
+      altDays: 0, radius: 0.025, zoom: this.props.mapState.zoom,
       fromAddress: '', toAddress: '',
       fromLocation: {}, toLocation: {},
       activeLocation: this.props.mapState.center
@@ -27,6 +27,7 @@ class FindRidePage extends React.Component {
     this.handleSelect = this.handleSelect.bind(this);
     this.swapAddrs = this.swapAddrs.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleMapChange = this.handleMapChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCenterChange = this.handleCenterChange.bind(this);
   }
@@ -80,6 +81,13 @@ class FindRidePage extends React.Component {
       state[name] = e.target.value;
     }
     this.setState(state);
+  }
+  handleMapChange({center, zoom}) {
+    this.setState({
+      ...this.state,
+      activeLocation: center,
+      zoom
+    });
   }
   handleCenterChange(e) {
     e.preventDefault();
@@ -146,8 +154,9 @@ class FindRidePage extends React.Component {
         <div style={{ height: '90vh', width: '100%' }}>
           <GoogleMapReact
             bootstrapURLKeys={{ key: '' }}
-            center={this.state.activeLocation}
+            onChange={this.handleMapChange}
             zoom={this.state.zoom}
+            center={this.state.activeLocation}
           >
           {mapState.searchResults.map((ride,i) => (
             <Pin text={(i+1).toString()}

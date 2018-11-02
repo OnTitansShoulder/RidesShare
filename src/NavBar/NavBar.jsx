@@ -9,7 +9,6 @@ import './navbar.css';
 class NavBar extends React.Component {
   constructor(props) {
     super(props);
-
     this.handleLogout = this.handleLogout.bind(this);
   }
 
@@ -39,6 +38,7 @@ class NavBar extends React.Component {
             <NavItem className="third" href="/sharing">Sharing</NavItem>
           </Nav>
           <Nav pullRight>
+            <NavItem className="second" href="/dashboard">Hello, {user.firstname}</NavItem>
             <NavItem className="right" onClick={this.handleLogout}>Sign Out</NavItem>
           </Nav></div>}
         </Navbar.Collapse>

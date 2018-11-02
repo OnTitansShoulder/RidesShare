@@ -10,13 +10,12 @@ import { HomePage, LoginPage, RegisterPage, DashboardPage, FindRidePage, PostRid
 
 class App extends React.Component {
   constructor(props) {
-      super(props);
-
-      const { dispatch } = this.props;
-      history.listen((location, action) => {
-          // clear alert on location change
-          dispatch(alertActions.clear());
-      });
+    super(props);
+    const { dispatch } = this.props;
+    history.listen((location, action) => {
+        // clear alert on location change
+        dispatch(alertActions.clear());
+    });
   }
 
   render() {
@@ -31,12 +30,12 @@ class App extends React.Component {
             }
             <Router history={history}>
               <div>
-                  <Route exact path="/" component={HomePage} />
-                  <Route path="/login" component={LoginPage} />
-                  <Route path="/register" component={RegisterPage} />
-                  <PrivateRoute exact path="/dashboard" component={DashboardPage} />
-                  <PrivateRoute exact path="/riding" component={FindRidePage} />
-                  <PrivateRoute exact path="/sharing" component={PostRidePage} />
+                <Route exact path="/" component={HomePage} />
+                <Route path="/login" component={LoginPage} />
+                <Route path="/register" component={RegisterPage} />
+                <PrivateRoute path="/dashboard" component={DashboardPage} />
+                <PrivateRoute path="/riding" component={FindRidePage} />
+                <PrivateRoute path="/sharing" component={PostRidePage} />
               </div>
             </Router>
           </div>
@@ -47,10 +46,10 @@ class App extends React.Component {
 }
 
 function mapStateToProps(state) {
-    const { alert } = state;
-    return {
-        alert
-    };
+  const { alert } = state;
+  return {
+      alert
+  };
 }
 
 const connectedApp = connect(mapStateToProps)(App);

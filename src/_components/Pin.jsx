@@ -84,7 +84,7 @@ class Pin extends React.Component {
               <h4>Driver Info</h4>
               <p>Name: {rideInfo && rideInfo.fullname} </p>
               <h4>Comments</h4>
-              <textarea rows={6} cols={65} name='comments'
+              <textarea rows={6} cols={48} name='comments'
                 placeholder='Write what you need to let the driver know here,
                 such as how many luggages you will bring and whether you want to share the gas.'
                 onChange={this.handleChange}></textarea>

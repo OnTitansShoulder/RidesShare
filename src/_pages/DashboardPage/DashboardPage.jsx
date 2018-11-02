@@ -1,90 +1,36 @@
 import React from 'react';
-import {Grid, Row, Col, Table, Panel} from 'react-bootstrap';
+import {Grid, Row, Col} from 'react-bootstrap';
 import { connect } from 'react-redux';
-
-import { requestActions } from '../../_actions';
-import { Pin, TableRow } from '../../_components';
+import { history } from '../../_helpers';
+import { PrivateRoute } from '../../_components';
 import '../../css/adjustments.css';
+
+import { RidesPage } from './Rides';
+import { SettingsPage } from './Settings';
 
 class DashboardPage extends React.Component {
   constructor(props) {
     super(props);
-  }
-  componentDidMount() {
-    const dispatch = this.props.dispatch;
-    const user = this.props.user;
-    dispatch(requestActions.findMyRides(user));
-    dispatch(requestActions.findMyRideReqs(user));
+    history.listen((location, action) => {
+      // clear alert on location change
+      this.props.dispatch(alertActions.clear());
+    });
   }
   render() {
-    const { user, myRides, myRideReqs } = this.props;
-    const testRide = {
-      _id: "5bcfe266bcaea77e579f6cea",
-      leavingDate: "2018-10-24T02:20:50.000Z",
-      seats: 0,
-      fromAddress: "2777 Southwest Archer Road, Gainesville, FL, USA",
-      toAddress: "1756 Northwest 71st Avenue, Plantation, FL, USA",
-      fullname: "Zhongkai Liu",
-      username: "zkliu@ufl.edu"
-    };
+    const { profileUrl, match } = this.props;
     return (
       <div> <Grid> <Row>
         <Col xs={2}>
-          <div className="text-center">
+          <div className="text-center"><a href={`${match.url}/settings`}>
             <img style={{width: '100px'}} src="/src/assets/Headshot.jpg" />
-          </div>
-          <br />
-          <button className="btn btn-primary btn-block">Account Settings</button> <br />
-          <button className="btn btn-primary btn-block">Reset Password</button> <br />
-          <button className="btn btn-primary btn-block">Sign Out</button> <br />
-          <Pin text='1' rideInfo={testRide} />
+          </a></div><br />
+          <a href={`${match.url}`} className="btn btn-primary btn-block">Ride Requests</a> <br />
+          <a href={`${match.url}/settings`} className="btn btn-primary btn-block">Account Settings</a> <br />
+          <a href={`${match.url}/password`} className="btn btn-primary btn-block">Reset Password</a> <br />
         </Col>
-        <Col xs={10}>
-        <Panel id='driverPanel' defaultExpanded={true}>
-          <Panel.Heading style={{color: '#337ab7'}}>
-            <Panel.Title toggle={true}>Me As the Driver</Panel.Title>
-          </Panel.Heading>
-          <Panel.Collapse><Panel.Body>
-            {myRides.length > 0 && <Table striped bordered condensed hover>
-              <thead><tr>
-                <th>Departure Time</th>
-                <th>From</th>
-                <th>To</th>
-                <th>Rider</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr></thead>
-              <tbody>
-                {myRides.map((ride, i) => (
-                  <TableRow key={i} rideInfo={ride} isDriver={true}/>
-                ))}
-              </tbody>
-            </Table>}
-          </Panel.Body></Panel.Collapse>
-        </Panel>
-        <Panel id='riderPanel' defaultExpanded={true}>
-          <Panel.Heading style={{color: '#337ab7'}}>
-            <Panel.Title toggle={true}>Me As the Rider</Panel.Title>
-          </Panel.Heading>
-          <Panel.Collapse><Panel.Body>
-            {myRideReqs.length > 0 && <Table striped bordered condensed hover>
-              <thead><tr>
-                <th>Departure Time</th>
-                <th>From</th>
-                <th>To</th>
-                <th>Driver</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr></thead>
-              <tbody>
-                {myRideReqs.map((ride, i) => (
-                  <TableRow key={i} rideInfo={ride} isDriver={false}/>
-                ))}
-              </tbody>
-            </Table>}
-          </Panel.Body></Panel.Collapse>
-        </Panel>
-        </Col>
+        <PrivateRoute exact path={`${match.path}`} component={RidesPage}></PrivateRoute>
+        <PrivateRoute path={`${match.path}/settings`} component={SettingsPage}></PrivateRoute>
+        <PrivateRoute path={`${match.path}/password`} component={RidesPage}></PrivateRoute>
       </Row> </Grid> </div>
     );
   }
@@ -92,9 +38,7 @@ class DashboardPage extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    user: state.authentication.user,
-    myRides: state.rideRequests.myRides,
-    myRideReqs: state.rideRequests.myRideReqs
+    profileUrl: state.authentication.user,
   };
 }
 
