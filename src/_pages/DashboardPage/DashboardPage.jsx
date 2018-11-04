@@ -7,6 +7,7 @@ import '../../css/adjustments.css';
 
 import { RidesPage } from './Rides';
 import { SettingsPage } from './Settings';
+import { PasswordPage } from './Password';
 
 class DashboardPage extends React.Component {
   constructor(props) {
@@ -30,7 +31,7 @@ class DashboardPage extends React.Component {
         </Col>
         <PrivateRoute exact path={`${match.path}`} component={RidesPage}></PrivateRoute>
         <PrivateRoute path={`${match.path}/settings`} component={SettingsPage}></PrivateRoute>
-        <PrivateRoute path={`${match.path}/password`} component={RidesPage}></PrivateRoute>
+        <PrivateRoute path={`${match.path}/password`} component={PasswordPage}></PrivateRoute>
       </Row> </Grid> </div>
     );
   }

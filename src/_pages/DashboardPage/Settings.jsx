@@ -40,7 +40,7 @@ class SettingsPage extends React.Component {
       <div><Col xs={10}>
         <Col xs={10} xsOffset={1} sm={4} smOffset={4}><Row>
         <form onSubmit={this.handleSubmit}>
-          <div className="text-center"><a href={`${match.url}/settings`}>
+          <div className="text-center"><a onClick={this.handleShow}>
             <img style={{width: '100px'}} src="/src/assets/Headshot.jpg" />
           </a></div><br />
           <FormGroup controlId="Email">
