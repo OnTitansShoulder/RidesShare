@@ -9,7 +9,9 @@ export const requestActions = {
   newRideReq,
   findMyRides,
   findMyRideReqs,
-  updateRide
+  findMySharedRides,
+  updateRide,
+  updateRideReq
 };
 
 function newRide(rideInfo, user) {
@@ -120,15 +122,35 @@ function findMyRideReqs(user) {
   function failure(msg) { return { type: requestConstants.MYRIDEREQS_FAILURE, message: msg }}
 }
 
-function updateRide(ridereqId, updates) {
+function findMySharedRides(user) {
+  return dispatch => {
+    requestService.findMySharedRides({ username: user.username }).then(
+        (data) => dispatch(success(data)),
+        err => console.log(error.toString())
+      );
+  };
+  function success(data) { return { type: requestConstants.MYSHAREDRIDES_SUCCESS, shared_rides: data }}
+}
+
+function updateRide(rideId, updates) {
+  return dispatch => {
+    requestService.updateRide({ rideId, updates }).then(
+        () => dispatch(success()),
+        err => console.log(error.toString())
+      );
+  };
+  function success() { return { type: requestConstants.UPDATERIDE_SUCCESS, id: rideId, updates }}
+}
+
+function updateRideReq(ridereqId, updates) {
   return dispatch => {
     dispatch(request());
-    requestService.updateReq({ ridereqId, updates }).then(
+    requestService.updateRideReq({ ridereqId, updates }).then(
         () => dispatch(success()),
         err => dispatch(failure(error.toString()))
       );
   };
   function request() { return { type: requestConstants.UPDATEREQ_SENT }}
-  function success() { return { type: requestConstants.UPDATEREQ_SUCCESS, ridereqId, updates }}
+  function success() { return { type: requestConstants.UPDATEREQ_SUCCESS, id: ridereqId, updates }}
   function failure(msg) { return { type: requestConstants.UPDATEREQ_FAILURE, message: msg }}
 }

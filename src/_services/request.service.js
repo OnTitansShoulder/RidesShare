@@ -8,7 +8,9 @@ export const requestService = {
   searchRides,
   findMyRides,
   findMyRideReqs,
-  updateReq
+  findMySharedRides,
+  updateRide,
+  updateRideReq
 };
 
 function newRide(rideInfo) {
@@ -67,7 +69,29 @@ function findMyRideReqs(reqInfo) {
     .then(sharedServices.handleResponse);
 }
 
-function updateReq(reqInfo) {
+function findMySharedRides(reqInfo) {
+  const auth_header = authHeader();
+  const requestOptions = {
+    method: 'POST',
+    headers: { ...auth_header, 'Content-Type': 'application/json' },
+    body: JSON.stringify(reqInfo)
+  };
+  return fetch(`${config.apiUrl}/api/requests/sharedrides`, requestOptions)
+    .then(sharedServices.handleResponse);
+}
+
+function updateRide(rideUpdate) {
+  const auth_header = authHeader();
+  const requestOptions = {
+    method: 'POST',
+    headers: { ...auth_header, 'Content-Type': 'application/json' },
+    body: JSON.stringify(rideUpdate)
+  };
+  return fetch(`${config.apiUrl}/api/requests/ride`, requestOptions)
+    .then(sharedServices.handleResponse);
+}
+
+function updateRideReq(reqInfo) {
   const auth_header = authHeader();
   const requestOptions = {
     method: 'POST',

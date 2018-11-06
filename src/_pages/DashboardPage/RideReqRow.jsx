@@ -4,9 +4,9 @@ import { Glyphicon, ButtonGroup, Button, ButtonToolbar,
   Modal, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import moment from 'moment';
 import { connect } from 'react-redux';
-import '../css/adjustments.css';
-import '../css/special-overwrite.css';
-import { requestActions } from '../_actions';
+import '../../css/adjustments.css';
+import '../../css/special-overwrite.css';
+import { requestActions } from '../../_actions';
 
 const btnStyle = { padding: '6px 6px 6px 6px'};
 function OverlayTooltip({children, tooltip}) {
@@ -18,7 +18,7 @@ function OverlayTooltip({children, tooltip}) {
   );
 }
 
-class TableRow extends React.Component {
+class RideReqRow extends React.Component {
   constructor(props) {
     super(props);
     this.state = { showModal: false };
@@ -29,12 +29,12 @@ class TableRow extends React.Component {
   }
   handleAccept() {
     const ride = this.props.rideInfo;
-    this.props.dispatch(requestActions.updateRide(ride._id, { status: 'ACCEPTED'}));
+    this.props.dispatch(requestActions.updateRideReq(ride._id, { status: 'ACCEPTED'}));
   }
   handleReject() {
     const ride = this.props.rideInfo;
     this.handleClose();
-    this.props.dispatch(requestActions.updateRide(ride._id, { status: 'REJECTED'}));
+    this.props.dispatch(requestActions.updateRideReq(ride._id, { status: 'REJECTED'}));
   }
   handleShow() { this.setState({ ...this.state, showModal: true }); }
   handleClose() { this.setState({showModal: false}); }
@@ -48,9 +48,9 @@ class TableRow extends React.Component {
         <td>{ride.driverName}</td>
         <td>{ride.status}</td>
         <td><ButtonToolbar><ButtonGroup>
-          {this.props.isDriver && ride.status == 'PENDING' && <OverlayTooltip tooltip="accept">
+          {this.props.isDriver && (ride.status == 'PENDING' && <OverlayTooltip tooltip="accept">
             <Button bsStyle='success' style={btnStyle} onClick={this.handleAccept}>
-            <Glyphicon glyph='ok'/></Button></OverlayTooltip>
+            <Glyphicon glyph='ok'/></Button></OverlayTooltip>)
           }
           {ride.status != 'REJECTED' && <OverlayTooltip tooltip="reject">
             <Button bsStyle='danger' style={btnStyle} onClick={this.handleShow}>
@@ -64,7 +64,7 @@ class TableRow extends React.Component {
         <Modal show={this.state.showModal} onHide={this.handleClose}>
           <Modal.Header closeButton><Modal.Title>Are you sure?</Modal.Title></Modal.Header>
           <Modal.Body>
-            <p>Once you reject a request, there is no way to accept it again.</p>
+            <p>Once you proceed, there is no way to reverse this action.</p>
             <p><bold>Both the driver and the rider will be notified for this action. Proceed?</bold></p><br />
             <Button bsStyle='danger' onClick={this.handleReject}>Confirm</Button>
             <Button className='pull-right' bsStyle='default' onClick={this.handleClose}>Cancel</Button>
@@ -75,7 +75,7 @@ class TableRow extends React.Component {
   }
 }
 
-TableRow.propTypes = {
+RideReqRow.propTypes = {
   isDriver: PropTypes.bool,
   rideInfo: PropTypes.object
 };
@@ -84,5 +84,5 @@ function mapStateToProps(state) {
   return {};
 }
 
-const connectedTableRow = connect(mapStateToProps)(TableRow)
-export { connectedTableRow as TableRow };
+const connectedRideReqRow = connect(mapStateToProps)(RideReqRow)
+export { connectedRideReqRow as RideReqRow };
