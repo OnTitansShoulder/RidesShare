@@ -1,4 +1,4 @@
-import { requestConstants } from '../_constants';
+import { requestConstants, alertConstants } from '../_constants';
 import { alertActions } from './';
 import { history } from '../_helpers';
 import { requestService } from '../_services';
@@ -11,12 +11,13 @@ export const requestActions = {
   findMyRideReqs,
   findMySharedRides,
   updateRide,
-  updateRideReq
+  updateRideReq,
+  dashboard_refresh
 };
 
 function newRide(rideInfo, user) {
   return dispatch => {
-    dispatch(request());
+    dispatch(loading('load_car'));
     rideInfo = {
       ...rideInfo,
       username: user.username
@@ -27,21 +28,15 @@ function newRide(rideInfo, user) {
           dispatch(success());
           history.push('/dashboard');
         },
-        err => {
-          dispatch(failure(error.toString()));
-          dispatch(alertActions.error(error.toString()));
-        }
+        err => dispatch(alertActions.error(error.toString()))
       );
   };
-
-  function request() { return { type: requestConstants.NEW_RIDE_SENT }}
   function success() { return { type: requestConstants.NEW_RIDE_SUCCESS }}
-  function failure(msg) { return { type: requestConstants.NEW_RIDE_FAILURE, message: msg }}
 }
 
 function newRideReq(rideInfo, user, comments) {
   return dispatch => {
-    dispatch(request());
+    dispatch(loading('load_car'));
     var reqInfo = {
       rideId: rideInfo._id,
       fromAddress: rideInfo.fromAddress,
@@ -59,27 +54,22 @@ function newRideReq(rideInfo, user, comments) {
         () => {
           dispatch(success());
         },
-        err => {
-          dispatch(failure(error.toString()));
-        }
+        err => dispatch(alertActions.error(error.toString()))
       )
   };
-
-  function request() { return { type: requestConstants.NEW_RIDEREQ_SENT }}
   function success() { return { type: requestConstants.NEW_RIDEREQ_SUCCESS }}
-  function failure(msg) { return { type: requestConstants.NEW_RIDEREQ_FAILURE, message: msg }}
 }
 
 function searchRides(criteria, user) {
   return dispatch => {
-    dispatch(request());
+    dispatch(loading('load_car'));
     requestService.searchRides({ criteria })
       .then(
         (data) => {
           dispatch(success(data));
         },
         err => {
-          dispatch(failure(error.toString()));
+          dispatch(alertActions.error(error.toString()));
         }
       );
   };
@@ -97,46 +87,76 @@ function searchRides(criteria, user) {
 
 function findMyRides(user) {
   return dispatch => {
-    dispatch(request());
+    dispatch(loading('load_car'));
     requestService.findMyRides({ username: user.username }).then(
         (data) => dispatch(success(data)),
-        err => dispatch(failure(error.toString()))
+        err => dispatch(alertActions.error(error.toString()))
       );
   };
-
-  function request() { return { type: requestConstants.MYRIDES_SENT }}
   function success(data) { return { type: requestConstants.MYRIDES_SUCCESS, rides: data }}
-  function failure(msg) { return { type: requestConstants.MYRIDES_FAILURE, message: msg }}
 }
 
 function findMyRideReqs(user) {
   return dispatch => {
-    dispatch(request());
+    dispatch(loading('load_car'));
     requestService.findMyRideReqs({ username: user.username }).then(
         (data) => dispatch(success(data)),
-        err => dispatch(failure(error.toString()))
+        err => dispatch(alertActions.error(error.toString()))
       );
   };
-  function request() { return { type: requestConstants.MYRIDEREQS_SENT }}
   function success(data) { return { type: requestConstants.MYRIDEREQS_SUCCESS, ridereqs: data }}
-  function failure(msg) { return { type: requestConstants.MYRIDEREQS_FAILURE, message: msg }}
 }
 
 function findMySharedRides(user) {
   return dispatch => {
     requestService.findMySharedRides({ username: user.username }).then(
         (data) => dispatch(success(data)),
-        err => console.log(error.toString())
+        err => dispatch(alertActions.error(error.toString()))
       );
   };
   function success(data) { return { type: requestConstants.MYSHAREDRIDES_SUCCESS, shared_rides: data }}
 }
 
+function dashboard_refresh(user) {
+  var results = { rides: [], ridereqs: [], shared_rides: []};
+  var counter = 0;
+  return dispatch => {
+    dispatch(loading('load_car'));
+    requestService.findMyRides({ username: user.username }).then(
+        (data) => {
+          results.rides = data;
+          checkComplete();
+        },
+        err => { dispatch(alertActions.error(error.toString())); checkComplete();}
+      );
+    requestService.findMyRideReqs({ username: user.username }).then(
+        (data) => {
+          results.ridereqs = data;
+          checkComplete();
+        },
+        err => { dispatch(alertActions.error(error.toString())); checkComplete();}
+      );
+    requestService.findMySharedRides({ username: user.username }).then(
+        (data) => {
+          results.shared_rides = data;
+          checkComplete();
+        },
+        err => { dispatch(alertActions.error(error.toString())); checkComplete();}
+      );
+    function checkComplete() {
+      counter += 1;
+      if (counter == 3) dispatch(success(results));
+    }
+  };
+  function success(data) { return { type: requestConstants.DASH_REFRESHED, results: data }}
+}
+
 function updateRide(rideId, updates) {
   return dispatch => {
+    dispatch(loading('load_car'));
     requestService.updateRide({ rideId, updates }).then(
         () => dispatch(success()),
-        err => console.log(error.toString())
+        err => dispatch(alertActions.error(error.toString()))
       );
   };
   function success() { return { type: requestConstants.UPDATERIDE_SUCCESS, id: rideId, updates }}
@@ -144,13 +164,13 @@ function updateRide(rideId, updates) {
 
 function updateRideReq(ridereqId, updates) {
   return dispatch => {
-    dispatch(request());
+    dispatch(loading('load_car'));
     requestService.updateRideReq({ ridereqId, updates }).then(
         () => dispatch(success()),
-        err => dispatch(failure(error.toString()))
+        err => dispatch(alertActions.error(error.toString()))
       );
   };
-  function request() { return { type: requestConstants.UPDATEREQ_SENT }}
   function success() { return { type: requestConstants.UPDATEREQ_SUCCESS, id: ridereqId, updates }}
-  function failure(msg) { return { type: requestConstants.UPDATEREQ_FAILURE, message: msg }}
 }
+
+function loading(circle_type) { return { type: alertConstants.LOADING, circle_type: circle_type }}

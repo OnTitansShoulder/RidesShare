@@ -14,9 +14,10 @@ class RidesPage extends React.Component {
   componentDidMount() {
     const dispatch = this.props.dispatch;
     const user = this.props.user;
-    dispatch(requestActions.findMyRides(user));
-    dispatch(requestActions.findMyRideReqs(user));
-    dispatch(requestActions.findMySharedRides(user));
+    // dispatch(requestActions.findMyRides(user));
+    // dispatch(requestActions.findMyRideReqs(user));
+    // dispatch(requestActions.findMySharedRides(user));
+    dispatch(requestActions.dashboard_refresh(user));
   }
   render() {
     const { user, myRides, myRideReqs, myShared } = this.props;

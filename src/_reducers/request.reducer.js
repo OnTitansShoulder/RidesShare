@@ -34,6 +34,12 @@ export function rideRequests(state = initState, action) {
         ...state,
         mySharedRides: updateList(state.mySharedRides, action)
       }
+    case requestConstants.DASH_REFRESHED:
+      return {
+        myRides: action.results.rides,
+        myRideReqs: action.results.ridereqs,
+        mySharedRides: action.results.shared_rides
+      }
     default:
       return state
   }

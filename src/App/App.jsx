@@ -8,6 +8,22 @@ import { alertActions } from '../_actions';
 import { PrivateRoute } from '../_components';
 import { HomePage, LoginPage, RegisterPage, DashboardPage, FindRidePage, PostRidePage } from '../_pages';
 
+function LOADING({source}) {
+  return (<img src="/src/assets/loading_spin.gif" />);
+} //{`../assets/${source}.gif`}
+const cntnerStyle = {
+  position: "fixed",
+  height: "100%",
+  width: "100%"
+};
+const absStyle = {
+  position: "absolute",
+  top: "50%",
+  left: "0",
+  right: "0",
+  textAlign: "center"
+};
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -22,6 +38,9 @@ class App extends React.Component {
     const { alert } = this.props;
     return (
       <div>
+        { (alert.load_circle) && <div style={cntnerStyle}>
+          <div style={absStyle}><LOADING source={alert.circle_type} /></div>
+        </div>}
         <NavBar />
         <div className="container">
           <div>
