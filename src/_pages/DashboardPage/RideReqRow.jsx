@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import '../../css/adjustments.css';
 import '../../css/special-overwrite.css';
 import { requestActions } from '../../_actions';
+import { FontAwesomeIcon as FAI } from '@fortawesome/react-fontawesome';
 
 const btnStyle = { padding: '6px 6px 6px 6px'};
 function OverlayTooltip({children, tooltip}) {
@@ -62,10 +63,10 @@ class RideReqRow extends React.Component {
           }
         </ButtonGroup></ButtonToolbar></td>
         <Modal show={this.state.showModal} onHide={this.handleClose}>
-          <Modal.Header closeButton><Modal.Title>Are you sure?</Modal.Title></Modal.Header>
+          <Modal.Header closeButton><Modal.Title><FAI icon="question-circle" /> Are you sure?</Modal.Title></Modal.Header>
           <Modal.Body>
             <p>Once you proceed, there is no way to reverse this action.</p>
-            <p><bold>Both the driver and the rider will be notified for this action. Proceed?</bold></p><br />
+            <p><strong>Both the driver and the rider will be notified for this action. Proceed?</strong></p><br />
             <Button bsStyle='danger' onClick={this.handleReject}>Confirm</Button>
             <Button className='pull-right' bsStyle='default' onClick={this.handleClose}>Cancel</Button>
           </Modal.Body>

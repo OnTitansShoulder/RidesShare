@@ -28,20 +28,25 @@ export function rideRequests(state = initState, action) {
         ...state,
         myRides: updateList(state.myRides, action),
         myRideReqs: updateList(state.myRideReqs, action)
-      }
+      };
     case requestConstants.UPDATERIDE_SUCCESS:
       return {
         ...state,
         mySharedRides: updateList(state.mySharedRides, action)
-      }
+      };
     case requestConstants.DASH_REFRESHED:
       return {
         myRides: action.results.rides,
         myRideReqs: action.results.ridereqs,
         mySharedRides: action.results.shared_rides
-      }
+      };
+    case requestConstants.DELETERIDE_SUCCESS:
+      return {
+        ...state,
+        mySharedRides: removeFromList(state.mySharedRides, action)
+      };
     default:
-      return state
+      return state;
   }
   function updateList(rideList, action) {
     return rideList.map(ridereq => {
@@ -53,6 +58,11 @@ export function rideRequests(state = initState, action) {
         };
       }
       return ridereq;
+    });
+  }
+  function removeFromList(rideList, action) {
+    return rideList.filter(ride => {
+      if (action.id != ride._id) return ride;
     });
   }
 }
