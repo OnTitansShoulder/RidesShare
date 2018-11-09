@@ -7,6 +7,10 @@ import { NavBar } from '../NavBar'
 import { alertActions } from '../_actions';
 import { PrivateRoute } from '../_components';
 import { HomePage, LoginPage, RegisterPage, DashboardPage, FindRidePage, PostRidePage } from '../_pages';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCar, faQuestionCircle as faQC, faInfoCircle as faIC } from '@fortawesome/free-solid-svg-icons';
+library.add(faCar, faQC, faIC);
 
 function LOADING({source}) {
   return (<img src="/src/assets/loading_spin.gif" />);
@@ -14,7 +18,8 @@ function LOADING({source}) {
 const cntnerStyle = {
   position: "fixed",
   height: "100%",
-  width: "100%"
+  width: "100%",
+  zIndex: "3"
 };
 const absStyle = {
   position: "absolute",

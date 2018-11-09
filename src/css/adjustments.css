@@ -29,3 +29,8 @@
 .panel-body {
   padding: 0px !important
 }
+
+.adjusted-title {
+	margin: 0 0 20px;
+	font-size: 30px;
+}
