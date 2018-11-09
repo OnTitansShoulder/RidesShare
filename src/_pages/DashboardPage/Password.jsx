@@ -1,45 +1,42 @@
 import React from 'react';
-import {Row, Col, Button, FormGroup, FormControl} from 'react-bootstrap';
+import {Row, Col, Button, FormGroup, FormControl, OverlayTrigger, Popover} from 'react-bootstrap';
 import { connect } from 'react-redux';
+import { PasswordBox } from '../../_components';
+import { userActions } from '../../_actions';
 
 class PasswordPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      password: '',
-      confirm: ''
+      password: ''
     };
-    this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleUpdate = this.handleUpdate.bind(this);
   }
-  handleChange(e) {
+  handleUpdate(name, value) {
     const state = this.state;
-    state[e.target.name] = e.target.value;
+    state[name] = value;
     this.setState(state);
   }
   handleSubmit(e) {
     e.preventDefault();
-    const { dispatch } = this.props;
-    const user = this.state;
-    if (user.firstname && user.lastname && user.username && user.phone) {
-      dispatch(userActions.register(user));
+    const { dispatch, user } = this.props;
+    const password = this.state.password;
+    if (password) {
+      dispatch(userActions.changePassword({id: user._id, password, un: user.username}));
     }
   }
   render() {
-    const { profileUrl, match } = this.props;
     const _this = this.state;
     return (
       <div><Col xs={10}>
         <Col xs={10} xsOffset={1} sm={4} smOffset={4}><Row>
+        <p className="adjusted-title">Change your password</p>
         <form onSubmit={this.handleSubmit}><br />
-          <FormGroup controlId="newPassword">
-            <FormControl type="password" placeholder="New Password" value={_this.password} name="password" onChange={this.handleChange} />
-            <FormControl.Feedback />
-          </FormGroup>
-          <FormGroup controlId="newPasswordConfirm">
-            <FormControl type="password" placeholder="Confirm New Password" value={_this.confirm} name="confirm" onChange={this.handleChange} />
-            <FormControl.Feedback />
-          </FormGroup>
+          <PasswordBox handleUpdate={this.handleUpdate} /><br />
+          <div style={{display: 'grid', margin: '15px 0 0 0'}}>
+            <Button bsStyle='primary' onClick={this.handleSubmit} style={{ margin: 'auto' }}>Update</Button>
+          </div>
         </form>
       </Row></Col></Col></div>
     );

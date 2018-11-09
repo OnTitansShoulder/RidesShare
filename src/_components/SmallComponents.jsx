@@ -1,5 +1,5 @@
 import React from 'react';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { OverlayTrigger, Tooltip, Popover } from 'react-bootstrap';
 
 function OverlayTooltip({children, tooltip}) {
   return (
@@ -10,4 +10,12 @@ function OverlayTooltip({children, tooltip}) {
   );
 }
 
-export { OverlayTooltip };
+function OverlayPopOver({overlay}) {
+  return (
+    <Popover id="popover-positioned-bottom" title="">
+    {overlay}
+    </Popover>
+  )
+}
+
+export { OverlayTooltip, OverlayPopOver };

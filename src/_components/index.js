@@ -3,3 +3,8 @@ export * from './GoogleMap';
 export * from './Pin';
 export * from './ControlledPanels';
 export * from './SmallComponents';
+export * from './PhoneBox';
+export * from './EmailBox';
+export * from './TextOnlyBox';
+export * from './PasswordBox';
+export * from './ImageEditor';

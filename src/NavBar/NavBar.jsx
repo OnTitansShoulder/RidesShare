@@ -1,5 +1,6 @@
 import React from 'react';
 import { Navbar, Nav, NavItem, Button } from 'react-bootstrap';
+import { FontAwesomeIcon as FAI } from '@fortawesome/react-fontawesome';
 import { connect } from 'react-redux';
 
 import { history } from '../_helpers';
@@ -23,7 +24,7 @@ class NavBar extends React.Component {
       <Navbar collapseOnSelect>
     		<Navbar.Header>
     			<Navbar.Brand>
-    				<a href="/">RidesShare</a>
+    				<a href="/">Rides <FAI icon="car" /> Share</a>
     			</Navbar.Brand>
     			<Navbar.Toggle />
     		</Navbar.Header>
