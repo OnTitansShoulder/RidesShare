@@ -8,6 +8,8 @@ export const userService = {
   getAll,
   getById,
   update,
+  updatePW,
+  setUser,
   delete: _delete
 };
 
@@ -23,12 +25,16 @@ function login(username, password) {
   .then(user => {
     // login successful if there's a jwt token in the response
     if (user.token) {
-      // store user details and jwt token in local storage to keep user logged in between page refreshes
-      localStorage.setItem('user', JSON.stringify(user));
+      setUser(user);
     }
 
     return user;
   });
+}
+
+function setUser(user) {
+  // store user details and jwt token in local storage to keep user logged in between page refreshes
+  localStorage.setItem('user', JSON.stringify(user));
 }
 
 function logout() {
@@ -72,6 +78,16 @@ function update(user) {
   };
 
   return fetch(`${config.apiUrl}/api/users/${user.id}`, requestOptions).then(handleResponse);;
+}
+
+function updatePW(user) {
+  const requestOptions = {
+    method: 'PUT',
+    headers: { ...authHeader(), 'Content-Type': 'application/json' },
+    body: JSON.stringify(user)
+  };
+
+  return fetch(`${config.apiUrl}/api/users/changepw/${user.id}`, requestOptions).then(handleResponse);;
 }
 
 // prefixed function name with underscore because delete is a reserved word in javascript

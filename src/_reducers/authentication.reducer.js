@@ -1,4 +1,5 @@
 import { userConstants } from '../_constants';
+import { userService } from '../_services';
 
 let user = JSON.parse(localStorage.getItem('user'));
 const initialState = user ? { loggedIn: true, user } : {};
@@ -19,7 +20,17 @@ export function authentication(state = initialState, action) {
       return {};
     case userConstants.LOGOUT:
       return {};
+    case userConstants.UPDATEUSER_SUCCESS:
+      const newUser = {
+        ...state.user,
+        ...action.updates
+      };
+      userService.setUser(newUser);
+      return {
+        ...state,
+        user: newUser
+      };
     default:
-      return state
+      return state;
   }
 }

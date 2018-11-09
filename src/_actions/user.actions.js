@@ -1,4 +1,4 @@
-import { userConstants } from '../_constants';
+import { userConstants, alertConstants } from '../_constants';
 import { userService } from '../_services';
 import { alertActions } from './';
 import { history } from '../_helpers';
@@ -7,7 +7,9 @@ export const userActions = {
   login,
   logout,
   register,
+  updateUser,
   getAll,
+  changePassword,
   delete: _delete
 };
 
@@ -61,6 +63,30 @@ function register(user) {
   function failure(error) { return { type: userConstants.REGISTER_FAILURE, error } }
 }
 
+function updateUser(updates) {
+  return dispatch => {
+    dispatch(loading('load_circle'));
+    userService.update(updates)
+      .then(
+        () => dispatch(success()),
+        err => dispatch(alertActions.error(err.toString()))
+      );
+  }
+  function success() { return { type: userConstants.UPDATEUSER_SUCCESS, updates } }
+}
+
+function changePassword(updates) {
+  return dispatch => {
+    dispatch(loading('load_circle'));
+    userService.updatePW(updates)
+      .then(
+        () => dispatch(success()),
+        err => dispatch(alertActions.error(err.toString()))
+      );
+  }
+  function success() { return { type: userConstants.PWCHANGE_SUCCESS, updates } }
+}
+
 function getAll() {
   return dispatch => {
     dispatch(request());
@@ -93,3 +119,5 @@ function _delete(id) {
   function success(id) { return { type: userConstants.DELETE_SUCCESS, id } }
   function failure(id, error) { return { type: userConstants.DELETE_FAILURE, id, error } }
 }
+
+function loading(circle_type) { return { type: alertConstants.LOADING, circle_type: circle_type }}

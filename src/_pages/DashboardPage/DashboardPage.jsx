@@ -1,29 +1,25 @@
 import React from 'react';
 import {Grid, Row, Col} from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { history } from '../../_helpers';
 import { PrivateRoute } from '../../_components';
 import '../../css/adjustments.css';
 
 import { RidesPage } from './Rides';
 import { SettingsPage } from './Settings';
 import { PasswordPage } from './Password';
+const defaultImg = "/src/assets/Headshot_min.jpg";
 
 class DashboardPage extends React.Component {
   constructor(props) {
     super(props);
-    history.listen((location, action) => {
-      // clear alert on location change
-      this.props.dispatch(alertActions.clear());
-    });
   }
   render() {
-    const { profileUrl, match } = this.props;
+    const { profileImg, match } = this.props;
     return (
       <div> <Grid> <Row>
         <Col xs={2}>
           <div className="text-center"><a href={`${match.url}/settings`}>
-            <img style={{width: '100px'}} src="/src/assets/Headshot.jpg" />
+            <img style={{width: '100px'}} src={profileImg && profileImg || defaultImg} />
           </a></div><br />
           <a href={`${match.url}`} className="btn btn-primary btn-block">Ride Requests</a> <br />
           <a href={`${match.url}/settings`} className="btn btn-primary btn-block">Account Settings</a> <br />
@@ -39,7 +35,7 @@ class DashboardPage extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    profileUrl: state.authentication.user,
+    profileImg: state.authentication.user.profileImg,
   };
 }
 
