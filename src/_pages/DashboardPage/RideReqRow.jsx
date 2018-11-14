@@ -57,10 +57,6 @@ class RideReqRow extends React.Component {
             <Button bsStyle='danger' style={btnStyle} onClick={this.handleShow}>
             <Glyphicon glyph='remove'/></Button></OverlayTooltip>
           }
-          {ride.status != 'PENDING' && <OverlayTooltip tooltip="archive">
-            <Button bsStyle='warning' style={btnStyle} onClick={this.handleShow}>
-            <Glyphicon glyph='level-up'/></Button></OverlayTooltip>
-          }
         </ButtonGroup></ButtonToolbar></td>
         <Modal show={this.state.showModal} onHide={this.handleClose}>
           <Modal.Header closeButton><Modal.Title><FAI icon="question-circle" /> Are you sure?</Modal.Title></Modal.Header>

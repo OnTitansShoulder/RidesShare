@@ -9,8 +9,10 @@ export const requestService = {
   findMyRides,
   findMyRideReqs,
   findMySharedRides,
+  findMyHistory,
   updateRide,
   updateRideReq,
+  rateRide,
   deleteRide
 };
 
@@ -50,6 +52,12 @@ function findMySharedRides(reqInfo) {
     .then(sharedServices.handleResponse);
 }
 
+function findMyHistory(reqInfo) {
+  const requestOptions = defaultAuthReqOptions('POST', reqInfo);
+  return fetch(`${config.apiUrl}/api/requests/myhistory`, requestOptions)
+    .then(sharedServices.handleResponse);
+}
+
 function updateRide(rideUpdate) {
   const requestOptions = defaultAuthReqOptions('POST', rideUpdate);
   return fetch(`${config.apiUrl}/api/requests/ride`, requestOptions)
@@ -59,6 +67,12 @@ function updateRide(rideUpdate) {
 function updateRideReq(reqInfo) {
   const requestOptions = defaultAuthReqOptions('POST', reqInfo);
   return fetch(`${config.apiUrl}/api/requests/ridereq`, requestOptions)
+    .then(sharedServices.handleResponse);
+}
+
+function rateRide(reqInfo) {
+  const requestOptions = defaultAuthReqOptions('POST', reqInfo);
+  return fetch(`${config.apiUrl}/api/requests/rateride`, requestOptions)
     .then(sharedServices.handleResponse);
 }
 

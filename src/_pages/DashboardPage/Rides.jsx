@@ -103,8 +103,6 @@ class RidesPage extends React.Component {
             <Glyphicon glyph='ok'/></Button> Mark this ride request as accepted.</p>
             <p><Button bsStyle='danger'>
             <Glyphicon glyph='remove'/></Button> Reject this ride. Be 100% sure because it is not reversible and the rider will be notified for this decision.</p>
-            <p><Button bsStyle='warning'>
-            <Glyphicon glyph='level-up'/></Button> Archive this ride. You can view past ride requests in the history section.</p>
           </Modal.Body>
         </Modal>
       </Col>

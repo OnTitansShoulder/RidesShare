@@ -4,9 +4,7 @@ import { connect } from 'react-redux';
 import { PrivateRoute } from '../../_components';
 import '../../css/adjustments.css';
 
-import { RidesPage } from './Rides';
-import { SettingsPage } from './Settings';
-import { PasswordPage } from './Password';
+import { RidesPage, HistoryPage, SettingsPage, PasswordPage } from './';
 const defaultImg = "/src/assets/Headshot_min.jpg";
 
 class DashboardPage extends React.Component {
@@ -22,10 +20,12 @@ class DashboardPage extends React.Component {
             <img style={{width: '100px'}} src={profileImg && profileImg || defaultImg} />
           </a></div><br />
           <a href={`${match.url}`} className="btn btn-primary btn-block">Ride Requests</a> <br />
+          <a href={`${match.url}/history`} className="btn btn-primary btn-block">Ride History</a> <br />
           <a href={`${match.url}/settings`} className="btn btn-primary btn-block">Account Settings</a> <br />
           <a href={`${match.url}/password`} className="btn btn-primary btn-block">Reset Password</a> <br />
         </Col>
         <PrivateRoute exact path={`${match.path}`} component={RidesPage}></PrivateRoute>
+        <PrivateRoute path={`${match.path}/history`} component={HistoryPage}></PrivateRoute>
         <PrivateRoute path={`${match.path}/settings`} component={SettingsPage}></PrivateRoute>
         <PrivateRoute path={`${match.path}/password`} component={PasswordPage}></PrivateRoute>
       </Row> </Grid> </div>

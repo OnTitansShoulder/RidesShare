@@ -55,8 +55,8 @@ class RideRow extends React.Component {
         <Modal show={this.state.showModal} onHide={this.handleClose}>
           <Modal.Header closeButton><Modal.Title><FAI icon="question-circle" /> Delete this ride?</Modal.Title></Modal.Header>
           <Modal.Body>
-            <p>Once you delete the ride, it will be no longer searchable and recoverable.</p>
-            <p>Your achived ride requests will still exist and can be viewed on history page.</p><br />
+            <p>Once you delete the ride, it will be no longer searchable nor recoverable
+            , and all ride requests associated with it will be marked as REJECTED. Proceed?</p><br />
             <Button bsStyle='danger' onClick={this.handleDelete}>Confirm</Button>
             <Button className='pull-right' bsStyle='default' onClick={this.handleClose}>Cancel</Button>
           </Modal.Body>

@@ -8,10 +8,12 @@ export function alert(state = {}, action) {
     case requestConstants.NEW_RIDEREQ_SUCCESS:
     case requestConstants.UPDATEREQ_SUCCESS:
     case requestConstants.UPDATERIDE_SUCCESS:
+    case requestConstants.RATERIDE_SUCCESS:
     case requestConstants.SEARCH_RIDES_SUCCESS:
     case requestConstants.MYRIDES_SUCCESS:
     case requestConstants.MYRIDEREQS_SUCCESS:
     case requestConstants.MYSHAREDRIDES_SUCCESS:
+    case requestConstants.MYHISTORY_SUCCESS:
     case requestConstants.DASH_REFRESHED:
     case requestConstants.DELETERIDE_SUCCESS:
     case userConstants.UPDATEUSER_SUCCESS:

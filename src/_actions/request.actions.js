@@ -10,6 +10,8 @@ export const requestActions = {
   findMyRides,
   findMyRideReqs,
   findMySharedRides,
+  findMyHistory,
+  rateRide,
   updateRide,
   updateRideReq,
   dashboard_refresh,
@@ -118,6 +120,17 @@ function findMySharedRides(user) {
   function success(data) { return { type: requestConstants.MYSHAREDRIDES_SUCCESS, shared_rides: data }}
 }
 
+function findMyHistory(username) {
+  return dispatch => {
+    dispatch(loading('load_car'));
+    requestService.findMyHistory({ username: username }).then(
+        (data) => dispatch(success(data)),
+        err => dispatch(alertActions.error(err.toString()))
+      );
+  };
+  function success(data) { return { type: requestConstants.MYHISTORY_SUCCESS, history: data }}
+}
+
 function dashboard_refresh(user) {
   var results = { rides: [], ridereqs: [], shared_rides: []};
   var counter = 0;
@@ -172,6 +185,17 @@ function updateRideReq(ridereqId, updates) {
       );
   };
   function success() { return { type: requestConstants.UPDATEREQ_SUCCESS, id: ridereqId, updates }}
+}
+
+function rateRide(reqInfo) {
+  return dispatch => {
+    dispatch(loading('load_car'));
+    requestService.rateRide(reqInfo).then(
+        () => dispatch(success()),
+        err => dispatch(alertActions.error(err.toString()))
+      );
+  };
+  function success() { return { type: requestConstants.RATERIDE_SUCCESS, id: reqInfo.id, updates: reqInfo.updates }}
 }
 
 function deleteRide(rideId) {

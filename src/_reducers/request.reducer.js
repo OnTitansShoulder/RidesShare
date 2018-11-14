@@ -3,7 +3,11 @@ import { requestConstants } from '../_constants';
 const initState = {
   mySharedRides: [],
   myRides: [],
-  myRideReqs: []
+  myRideReqs: [],
+  myHistory: {
+    asDriver: [],
+    asRider: []
+  }
 };
 
 export function rideRequests(state = initState, action) {
@@ -23,6 +27,11 @@ export function rideRequests(state = initState, action) {
         ...state,
         mySharedRides: action.shared_rides
       };
+    case requestConstants.MYHISTORY_SUCCESS:
+      return {
+        ...state,
+        myHistory: action.history
+      };
     case requestConstants.UPDATEREQ_SUCCESS:
       return {
         ...state,
@@ -36,6 +45,7 @@ export function rideRequests(state = initState, action) {
       };
     case requestConstants.DASH_REFRESHED:
       return {
+        ...state,
         myRides: action.results.rides,
         myRideReqs: action.results.ridereqs,
         mySharedRides: action.results.shared_rides
