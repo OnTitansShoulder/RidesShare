@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Glyphicon, ButtonGroup, Button, ButtonToolbar,
-  Modal, Tooltip } from 'react-bootstrap';
+  Modal, Tooltip, ListGroup, ListGroupItem } from 'react-bootstrap';
 import StarRatings from 'react-star-ratings';
 import moment from 'moment';
 import { connect } from 'react-redux';
@@ -63,7 +63,7 @@ class HistoryRow extends React.Component {
         <td>{moment(ride.leavingDate).format('YYYY-MM-DD hh:mm A')}</td>
         <td>{ride.fromAddress}</td>
         <td>{ride.toAddress}</td>
-        <td>{isDriver && ride.driverName || ride.riderName}</td>
+        <td>{isDriver && ride.riderName || ride.driverName}</td>
         <td><ButtonToolbar><ButtonGroup>
           {<OverlayTooltip tooltip="rate him/her">
             <Button bsStyle='warning' style={btnStyle} onClick={this.handleShow}>
@@ -76,17 +76,32 @@ class HistoryRow extends React.Component {
           </Modal.Title></Modal.Header>
           <Modal.Body>
             <div className='indent-parag'>
-              <StarRatings rating={this.state.star} starRatedColor='rgb(255, 200, 0)'
-                changeRating={this.changeRating} />
-              <h4>Comments</h4>
-              <textarea rows={6} cols={48} name='comment'
-                placeholder='Write what you wish the other one to see.'
-                value={this.state.comment}
-                onChange={this.handleChange}></textarea>
-              <div style={{display: 'grid', margin: '15px 0 0 0'}}>
-                <button className='btn btn-primary' onClick={this.handleSubmit}
-                  style={{margin: 'auto'}}>Update Your Rating</button>
-              </div>
+              <ListGroup>
+                {isDriver && ride.riderComment.star >= 0 &&
+                <ListGroupItem header={`Feedback from ${ride.riderName}`}>
+                  <StarRatings rating={ride.riderComment.star}
+                  starRatedColor='rgb(255, 200, 0)' starDimension='25px' />
+                  <p>{`"${ride.riderComment.comment}"`}</p>
+                </ListGroupItem>}
+                {(!isDriver) && ride.driverComment.star >= 0 &&
+                <ListGroupItem header={`Feedback from ${ride.driverName}`}>
+                  <StarRatings rating={ride.driverComment.star}
+                  starRatedColor='rgb(255, 200, 0)' starDimension='25px' />
+                  <p>{`"${ride.driverComment.comment}"`}</p>
+                </ListGroupItem>}
+                <ListGroupItem header="Your Rating">
+                  <StarRatings rating={this.state.star} starRatedColor='rgb(255, 200, 0)'
+                    changeRating={this.changeRating} />
+                  <textarea rows={6} cols={44} name='comment'
+                    placeholder='Write what you wish the other one to see.'
+                    value={this.state.comment}
+                    onChange={this.handleChange}></textarea>
+                  <div style={{display: 'grid', margin: '15px 0 0 0'}}>
+                    <button className='btn btn-primary' onClick={this.handleSubmit}
+                      style={{margin: 'auto'}}>Update Your Rating</button>
+                  </div>
+                </ListGroupItem>
+              </ListGroup>
             </div>
           </Modal.Body>
         </Modal>
