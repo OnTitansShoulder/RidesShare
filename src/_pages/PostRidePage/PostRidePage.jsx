@@ -11,22 +11,24 @@ import '../../css/datetimepicker.css';
 import '../../css/geosuggest.css';
 import '../../css/adjustments.css';
 
-import { mapActions, requestActions } from '../../_actions';
+import { requestActions } from '../../_actions';
 
 class PostRidePage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       leavingDate: moment().format(),
-      seats: 0,
       fromAddress: '',
       toAddress: '',
       fromLocation: '',
       toLocation: '',
-      mapCenter: 'A'
+      activeLocation: this.props.mapState.center,
+      zoom: this.props.mapState.zoom
     };
     this.handleDateChange = this.handleDateChange.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleCenterChange = this.handleCenterChange.bind(this);
+    this.handleMapChange = this.handleMapChange.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -41,13 +43,25 @@ class PostRidePage extends React.Component {
     state['leavingDate'] = date;
     this.setState(state);
   }
-
   handleChange(e) {
     const state = this.state;
     state[e.target.name] = e.target.value;
     this.setState(state);
   }
-
+  handleCenterChange(e) {
+    e.preventDefault();
+    const state = this.state;
+    state['activeLocation'] = state[e.target.name];
+    state['zoom'] = 14;
+    this.setState(state);
+  }
+  handleMapChange({center, zoom}) {
+    this.setState({
+      ...this.state,
+      activeLocation: center,
+      zoom
+    });
+  }
   handleSelect(suggestion) {
     var address = suggestion.description;
     var location = suggestion.location;
@@ -55,23 +69,19 @@ class PostRidePage extends React.Component {
     if (suggestion.label.indexOf("...") != -1) {
       state['fromAddress'] = address;
       state['fromLocation'] = location;
-      state['mapCenter'] = 'A';
-      this.props.dispatch(mapActions.newCenter(location));
     } else {
       state['toAddress'] = address;
       state['toLocation'] = location;
-      state['mapCenter'] = 'B';
-      this.props.dispatch(mapActions.newCenter(location));
     }
+    state['activeLocation'] = location;
+    state['zoom'] = 14;
     this.setState(state);
   }
-
   handleSubmit(e) {
     e.preventDefault();
     const user = this.props.user;
     const rideInfo = {
       leavingDate: this.state.leavingDate,
-      seats: this.state.seats,
       fromAddress: this.state.fromAddress,
       toAddress: this.state.toAddress,
       fromLocation: this.state.fromLocation,
@@ -89,15 +99,17 @@ class PostRidePage extends React.Component {
             <h2>Post a Ride</h2> <br />
             <ControlLabel>Leaving Date and Time</ControlLabel>
             <DateTimePicker onChange={this.handleDateChange} /> <br />
-            <ControlLabel>Seats Available</ControlLabel>
-            <input className="adjust-input-box" type="number" name="seats" value={this.state.seats} onChange={this.handleChange} /> <br />
             <br />
-            <ControlLabel>Start Address</ControlLabel>
+            <button className={this.state.fromAddress && "btn btn-primary" || "btn btn-primary disabled"}
+              name="fromLocation"
+              onClick={this.handleCenterChange}>From</button>
             <Geosuggest
               placeholder="please select from suggestions"
               getSuggestLabel={(s) => s.description + " ..."}
               onSuggestSelect={this.handleSelect} /> <br />
-            <ControlLabel>Destination Address</ControlLabel>
+            <button className={this.state.toAddress && "btn btn-primary" || "btn btn-primary disabled"}
+              name="toLocation"
+              onClick={this.handleCenterChange}>To</button>
             <Geosuggest
               placeholder="please select from suggestions"
               onSuggestSelect={this.handleSelect} /> <br />
@@ -108,15 +120,15 @@ class PostRidePage extends React.Component {
           <div style={{ height: '90vh', width: '100%' }}>
             <GoogleMapReact
               bootstrapURLKeys={{ key: '' }}
-              center={mapState.center}
-              zoom={mapState.zoom}
+              center={this.state.activeLocation}
+              zoom={this.state.zoom}
             >
             {this.state.fromLocation && (
-              <Pin text={'A'} key={0} handleClick={() => {}}
+              <Pin text='A' key={0} handleClick={() => {}}
               lat={this.state.fromLocation.lat} lng={this.state.fromLocation.lng}/>
             )}
             {this.state.toLocation && (
-              <Pin text={'B'} key={1} handleClick={() => {}}
+              <Pin text='B' key={1} handleClick={() => {}}
               lat={this.state.toLocation.lat} lng={this.state.toLocation.lng}/>
             )}
             </GoogleMapReact>
@@ -128,7 +140,8 @@ class PostRidePage extends React.Component {
 }
 
 function mapStateToProps(state) {
-  return { mapState: state.mapState, user: state.authentication.user };
+  return { mapState: state.mapState,
+    user: state.authentication.user };
 }
 
 const connectedPostRidePage = connect(mapStateToProps)(PostRidePage);

@@ -7,17 +7,15 @@ class PhoneBox extends React.Component {
     super(props);
     this.state = {
       phone: this.props.phone,
-      valid: false
+      valid: null
     };
     this.validatePhone = this.validatePhone.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    this.isValid = this.isValid.bind(this);
   }
   componentDidMount() {
     const phone = this.props.phone;
     if (phone) this.validatePhone(phone);
   }
-  isValid() { return (this.state.valid && 'success' || 'error'); }
   validatePhone(value) {
     var digits = [].filter.call(value, c => {
       if (/[\d]/.test(c)) return c;
@@ -31,11 +29,11 @@ class PhoneBox extends React.Component {
       digits.splice(9, 0, '-');
     }
     var phone = digits.join("");
-    var valid = false;
+    var valid = 'error';
     if (digits.length >= 14) {
       digits.length = 14;
       phone = phone.substring(0, 14);
-      valid = true;
+      valid = 'success';
       this.props.handleUpdate('phone', phone);
     } else {
       this.props.handleUpdate('phone', '');
@@ -45,7 +43,7 @@ class PhoneBox extends React.Component {
   handleChange(e) { this.validatePhone(e.target.value); }
   render() {
     return (
-      <FormGroup controlId="phone" validationState={this.isValid()}>
+      <FormGroup controlId="phone" validationState={this.state.valid}>
       <FormControl type="text" value={this.state.phone} onChange={this.handleChange} placeholder="Phone Number"/>
       <FormControl.Feedback />
       </FormGroup>

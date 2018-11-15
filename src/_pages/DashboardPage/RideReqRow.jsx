@@ -41,15 +41,16 @@ class RideReqRow extends React.Component {
   handleClose() { this.setState({showModal: false}); }
   render() {
     const ride = this.props.rideInfo;
+    const isDriver = this.props.isDriver;
     return (
       <tr>
         <td>{moment(ride.leavingDate).format('YYYY-MM-DD hh:mm A')}</td>
         <td>{ride.fromAddress}</td>
         <td>{ride.toAddress}</td>
-        <td>{ride.driverName}</td>
+        <td>{isDriver && ride.riderName || ride.driverName}</td>
         <td>{ride.status}</td>
         <td><ButtonToolbar><ButtonGroup>
-          {this.props.isDriver && (ride.status == 'PENDING' && <OverlayTooltip tooltip="accept">
+          {isDriver && (ride.status == 'PENDING' && <OverlayTooltip tooltip="accept">
             <Button bsStyle='success' style={btnStyle} onClick={this.handleAccept}>
             <Glyphicon glyph='ok'/></Button></OverlayTooltip>)
           }

@@ -4,11 +4,11 @@ import { Grid, Row, Col, FormGroup, ControlLabel, FormControl } from 'react-boot
 import { connect } from 'react-redux';
 
 import { userActions } from '../../_actions';
+import { PhoneBox, EmailBox, TextOnlyBox, PasswordBox } from '../../_components';
 
 export default class RegisterPage extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       username: '',
       password: '',
@@ -16,22 +16,20 @@ export default class RegisterPage extends React.Component {
       lastname: '',
       phone: ''
     };
-
+    this.handleUpdate = this.handleUpdate.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-
   validateUN() {
     let un = this.state.username
     if (un == '') return null
     else if (un.indexOf('@ufl.edu') == -1) return 'error'
     return 'success'
   }
-  validatePW() {
-    let pw = this.state.password
-    if (pw == '') return null
-    else if (pw.length < 8) return 'error'
-    return 'success'
+  handleUpdate(name, value) {
+    const state = this.state;
+    state[name] = value;
+    this.setState(state);
   }
   validatePhone() {
     let pattern = /^[0-9]+$/
@@ -44,16 +42,13 @@ export default class RegisterPage extends React.Component {
     if (this.state.firstname == '' || this.state.lastname == '') return null
     return 'success'
   }
-
   handleChange(e) {
     const state = this.state
     state[e.target.name] = e.target.value
     this.setState(state)
   }
-
   handleSubmit(e) {
     e.preventDefault();
-
     const { dispatch } = this.props;
     const user = this.state;
     if (user.firstname && user.lastname && user.username && user.password && user.phone) {
@@ -71,30 +66,14 @@ export default class RegisterPage extends React.Component {
             <h2>Register {registering &&
               <img className="pull-right" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
             }</h2> <br />
-            <FormGroup controlId="Email" validationState={this.validateUN()}>
-              <FormControl type="email" placeholder="UF Email Address" value={_this.username} name="username" onChange={this.handleChange} />
-              <FormControl.Feedback />
-            </FormGroup>
-            <FormGroup controlId="Names" validationState={this.validateText()}>
-              <Row>
-                <Col xs={6}>
-                  <FormControl type="text" placeholder="First Name" value={_this.firstname} name="firstname" onChange={this.handleChange} />
-                  <FormControl.Feedback />
-                </Col>
-                <Col xs={6}>
-                  <FormControl type="text" placeholder="Last Name" value={_this.lastname} name="lastname" onChange={this.handleChange} />
-                  <FormControl.Feedback />
-                </Col>
-              </Row>
-            </FormGroup>
-            <FormGroup controlId="Phone" validationState={this.validatePhone()}>
-              <FormControl type="text" placeholder="Phone Number" value={_this.phone} name="phone" onChange={this.handleChange} />
-              <FormControl.Feedback />
-            </FormGroup>
-            <FormGroup controlId="Password" validationState={this.validatePW()}>
-              <FormControl type="password" placeholder="Choose a Password" value={_this.password} name="password" onChange={this.handleChange} />
-              <FormControl.Feedback />
-            </FormGroup>
+            <EmailBox email='' handleUpdate={this.handleUpdate} disabled={false} />
+            <Row><Col xs={6}>
+              <TextOnlyBox text='' name='firstname' handleUpdate={this.handleUpdate} />
+            </Col><Col xs={6}>
+              <TextOnlyBox text='' name='lastname' handleUpdate={this.handleUpdate} />
+            </Col></Row>
+            <PhoneBox phone='' handleUpdate={this.handleUpdate} /><br />
+            <PasswordBox handleUpdate={this.handleUpdate} /><br />
             <Row>
               <Col xs={6}>
                 <button className="btn btn-primary btn-block" type="submit">Register</button>
