@@ -8,3 +8,4 @@ export * from './EmailBox';
 export * from './TextOnlyBox';
 export * from './PasswordBox';
 export * from './ImageEditor';
+export * from './UserProfile';

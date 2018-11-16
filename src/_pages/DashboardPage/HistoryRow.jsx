@@ -53,7 +53,7 @@ class HistoryRow extends React.Component {
       updates
     };
     dispatch(requestActions.rateRide(reqInfo));
-    handleClose();
+    this.handleClose();
   }
   render() {
     const ride = this.props.rideInfo;
@@ -75,33 +75,34 @@ class HistoryRow extends React.Component {
           <Modal.Title>Rate {isDriver && ride.riderName || ride.driverName}
           </Modal.Title></Modal.Header>
           <Modal.Body>
-            <div className='indent-parag'>
-              <ListGroup>
-                {isDriver && ride.riderComment.star >= 0 &&
-                <ListGroupItem header={`Feedback from ${ride.riderName}`}>
-                  <StarRatings rating={ride.riderComment.star}
-                  starRatedColor='rgb(255, 200, 0)' starDimension='25px' />
-                  <p>{`"${ride.riderComment.comment}"`}</p>
-                </ListGroupItem>}
-                {(!isDriver) && ride.driverComment.star >= 0 &&
-                <ListGroupItem header={`Feedback from ${ride.driverName}`}>
-                  <StarRatings rating={ride.driverComment.star}
-                  starRatedColor='rgb(255, 200, 0)' starDimension='25px' />
-                  <p>{`"${ride.driverComment.comment}"`}</p>
-                </ListGroupItem>}
-                <ListGroupItem header="Your Rating">
-                  <StarRatings rating={this.state.star} starRatedColor='rgb(255, 200, 0)'
-                    changeRating={this.changeRating} />
-                  <textarea rows={6} cols={44} name='comment'
-                    placeholder='Write what you wish the other one to see.'
-                    value={this.state.comment}
-                    onChange={this.handleChange}></textarea>
-                  <div style={{display: 'grid', margin: '15px 0 0 0'}}>
-                    <button className='btn btn-primary' onClick={this.handleSubmit}
-                      style={{margin: 'auto'}}>Update Your Rating</button>
-                  </div>
-                </ListGroupItem>
-              </ListGroup>
+            <div className='modal-box'>
+              {isDriver && ride.riderComment.star >= 0 &&
+              <div>
+                <h4>{`Feedback from ${ride.riderName}`}</h4>
+                <StarRatings rating={ride.riderComment.star}
+                starRatedColor='rgb(255, 200, 0)' starDimension='25px' />
+                <p>{`"${ride.riderComment.comment}"`}</p>
+              </div>}
+              {(!isDriver) && ride.driverComment.star >= 0 &&
+              <div>
+                <h4>{`Feedback from ${ride.driverName}`}</h4>
+                <StarRatings rating={ride.driverComment.star}
+                starRatedColor='rgb(255, 200, 0)' starDimension='25px' />
+                <p>{`"${ride.driverComment.comment}"`}</p>
+              </div>}
+              <div className='modal-item-last'>
+                <h4>Your Rating</h4>
+                <StarRatings rating={this.state.star} starRatedColor='rgb(255, 200, 0)'
+                  changeRating={this.changeRating} />
+                <textarea rows={6} cols={44} name='comment'
+                  placeholder='Write what you wish the other one to see.'
+                  value={this.state.comment}
+                  onChange={this.handleChange}></textarea>
+                <div style={{display: 'grid', margin: '15px 0 0 0'}}>
+                  <button className='btn btn-primary' onClick={this.handleSubmit}
+                    style={{margin: 'auto'}}>Update Your Rating</button>
+                </div>
+              </div>
             </div>
           </Modal.Body>
         </Modal>

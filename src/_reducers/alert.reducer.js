@@ -18,6 +18,7 @@ export function alert(state = {}, action) {
     case requestConstants.DELETERIDE_SUCCESS:
     case userConstants.UPDATEUSER_SUCCESS:
     case userConstants.PWCHANGE_SUCCESS:
+    case userConstants.USERPROFILE_SUCCESS:
     case alertConstants.CLEAR:
       return {};
     case alertConstants.SUCCESS:

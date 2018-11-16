@@ -1,23 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Glyphicon, ButtonGroup, Button, ButtonToolbar,
-  Modal, OverlayTrigger, Tooltip } from 'react-bootstrap';
+  Modal } from 'react-bootstrap';
 import moment from 'moment';
 import { connect } from 'react-redux';
+import { OverlayTooltip, UserProfile } from '../../_components';
 import '../../css/adjustments.css';
 import '../../css/special-overwrite.css';
 import { requestActions } from '../../_actions';
 import { FontAwesomeIcon as FAI } from '@fortawesome/react-fontawesome';
 
 const btnStyle = { padding: '6px 6px 6px 6px'};
-function OverlayTooltip({children, tooltip}) {
-  return (
-    <OverlayTrigger
-      overlay={<Tooltip id={tooltip}>{tooltip}</Tooltip>}
-      placement="top" delayShow={300} delayHide={150}
-    >{children}</OverlayTrigger>
-  );
-}
 
 class RideReqRow extends React.Component {
   constructor(props) {
@@ -47,7 +40,8 @@ class RideReqRow extends React.Component {
         <td>{moment(ride.leavingDate).format('YYYY-MM-DD hh:mm A')}</td>
         <td>{ride.fromAddress}</td>
         <td>{ride.toAddress}</td>
-        <td>{isDriver && ride.riderName || ride.driverName}</td>
+        <td>{isDriver && <UserProfile name={ride.riderName} user={ride.rider} userProfile={ride.userProfile} /> ||
+          <UserProfile name={ride.driverName} user={ride.driver} userProfile={ride.userProfile} />}</td>
         <td>{ride.status}</td>
         <td><ButtonToolbar><ButtonGroup>
           {isDriver && (ride.status == 'PENDING' && <OverlayTooltip tooltip="accept">

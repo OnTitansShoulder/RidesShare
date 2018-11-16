@@ -50,6 +50,7 @@ class Pin extends React.Component {
     this.setState(state);
   }
   handleShow() {
+    if (this.props.rideInfo == null) return;
     this.setState({
       ...this.state, showModal: true
     }); }

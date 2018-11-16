@@ -9,8 +9,8 @@ import { PrivateRoute } from '../_components';
 import { HomePage, LoginPage, RegisterPage, DashboardPage, FindRidePage, PostRidePage } from '../_pages';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCar, faQuestionCircle as faQC, faInfoCircle as faIC } from '@fortawesome/free-solid-svg-icons';
-library.add(faCar, faQC, faIC);
+import { faCar, faQuestionCircle as faQC, faInfoCircle as faIC, faIdCard } from '@fortawesome/free-solid-svg-icons';
+library.add(faCar, faQC, faIC, faIdCard);
 
 function LOADING({source}) {
   return (<img src="/src/assets/loading_spin.gif" />);

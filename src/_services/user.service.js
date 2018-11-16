@@ -7,6 +7,7 @@ export const userService = {
   register,
   getAll,
   getById,
+  getUserProfile,
   update,
   updatePW,
   setUser,
@@ -58,6 +59,16 @@ function getById(id) {
   };
 
   return fetch(`${config.apiUrl}/api/users/${id}`, requestOptions).then(handleResponse);
+}
+
+function getUserProfile(reqInfo) {
+  const auth_header = authHeader();
+  const requestOptions = {
+    method: 'POST',
+    headers: { ...auth_header, 'Content-Type': 'application/json' },
+    body: JSON.stringify(reqInfo)
+  };
+  return fetch(`${config.apiUrl}/api/requests/getprofile`, requestOptions).then(handleResponse);
 }
 
 function register(user) {

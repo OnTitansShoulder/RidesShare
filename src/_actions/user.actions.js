@@ -8,7 +8,7 @@ export const userActions = {
   logout,
   register,
   updateUser,
-  getAll,
+  getUserProfile,
   changePassword,
   delete: _delete
 };
@@ -87,20 +87,15 @@ function changePassword(updates) {
   function success() { return { type: userConstants.PWCHANGE_SUCCESS, updates } }
 }
 
-function getAll() {
+function getUserProfile(username) {
   return dispatch => {
-    dispatch(request());
-
-    userService.getAll()
-    .then(
-      users => dispatch(success(users)),
-      error => dispatch(failure(error.toString()))
-    );
+    dispatch(loading('load_car'));
+    userService.getUserProfile({username}).then(
+        (result) => dispatch(success(result)),
+        err => dispatch(alertActions.error(err.toString()))
+      );
   };
-
-  function request() { return { type: userConstants.GETALL_REQUEST } }
-  function success(users) { return { type: userConstants.GETALL_SUCCESS, users } }
-  function failure(error) { return { type: userConstants.GETALL_FAILURE, error } }
+  function success(result) { return { type: userConstants.USERPROFILE_SUCCESS, result: result }}
 }
 
 // prefixed function name with underscore because delete is a reserved word in javascript

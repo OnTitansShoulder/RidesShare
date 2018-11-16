@@ -120,15 +120,16 @@ class PostRidePage extends React.Component {
           <div style={{ height: '90vh', width: '100%' }}>
             <GoogleMapReact
               bootstrapURLKeys={{ key: '' }}
+              onChange={this.handleMapChange}
               center={this.state.activeLocation}
               zoom={this.state.zoom}
             >
             {this.state.fromLocation && (
-              <Pin text='A' key={0} handleClick={() => {}}
+              <Pin text='A' key={0} rideInfo={null}
               lat={this.state.fromLocation.lat} lng={this.state.fromLocation.lng}/>
             )}
             {this.state.toLocation && (
-              <Pin text='B' key={1} handleClick={() => {}}
+              <Pin text='B' key={1} rideInfo={null}
               lat={this.state.toLocation.lat} lng={this.state.toLocation.lng}/>
             )}
             </GoogleMapReact>
